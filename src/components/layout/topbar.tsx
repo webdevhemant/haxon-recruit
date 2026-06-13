@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Bell, Menu, Plus, Search } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -20,11 +20,20 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { ROUTES } from '@/lib/routes'
+import { useAuthStore } from '@/stores/useAuthStore'
 import { Brand } from './brand'
 import { SidebarNav } from './sidebarNav'
 
 export function Topbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const navigate = useNavigate()
+  const user = useAuthStore((s) => s.user)
+  const logout = useAuthStore((s) => s.logout)
+
+  const onSignOut = () => {
+    logout()
+    navigate(ROUTES.login)
+  }
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-border bg-background/80 px-4 backdrop-blur lg:px-8">
@@ -74,14 +83,16 @@ export function Topbar() {
               aria-label="Account menu"
             >
               <Avatar>
-                <AvatarFallback>AT</AvatarFallback>
+                <AvatarFallback>{user?.initials ?? 'U'}</AvatarFallback>
               </Avatar>
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel>
-              <p className="text-sm font-medium">Alex Tran</p>
-              <p className="text-xs text-muted-foreground">Talent Lead</p>
+              <p className="text-sm font-medium">{user?.name ?? 'Guest'}</p>
+              <p className="text-xs text-muted-foreground">
+                {user?.email ?? 'Not signed in'}
+              </p>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
@@ -91,9 +102,7 @@ export function Topbar() {
               <Link to={ROUTES.settingsCompany}>Company profile</Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link to={ROUTES.landing}>Sign out</Link>
-            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={onSignOut}>Sign out</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

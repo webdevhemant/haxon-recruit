@@ -14,6 +14,42 @@ export const router = createBrowserRouter([
     },
   },
   {
+    lazy: async () => {
+      const m = await import('@/modules/auth/components/authLayout')
+      return { Component: m.AuthLayout }
+    },
+    children: [
+      {
+        path: ROUTES.login,
+        lazy: async () => {
+          const m = await import('@/modules/auth/pages/loginPage')
+          return { Component: m.LoginPage }
+        },
+      },
+      {
+        path: ROUTES.signup,
+        lazy: async () => {
+          const m = await import('@/modules/auth/pages/signupPage')
+          return { Component: m.SignupPage }
+        },
+      },
+      {
+        path: ROUTES.forgotPassword,
+        lazy: async () => {
+          const m = await import('@/modules/auth/pages/forgotPasswordPage')
+          return { Component: m.ForgotPasswordPage }
+        },
+      },
+      {
+        path: ROUTES.resetPassword,
+        lazy: async () => {
+          const m = await import('@/modules/auth/pages/resetPasswordPage')
+          return { Component: m.ResetPasswordPage }
+        },
+      },
+    ],
+  },
+  {
     element: <PublicLayout />,
     children: [
       {
