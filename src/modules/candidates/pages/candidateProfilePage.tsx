@@ -18,7 +18,9 @@ import { EmptyState } from '@/components/common/emptyState'
 import { daysAgoLabel } from '@/lib/format'
 import { DEFAULT_PIPELINE } from '@/lib/data/constants'
 import { ROUTES } from '@/lib/routes'
+import { usePermissions } from '@/hooks/usePermissions'
 import { useDataStore } from '@/stores/useDataStore'
+import { StatusBadge } from '@/components/common/statusBadge'
 import {
   findCandidate,
   findJob,
@@ -50,6 +52,8 @@ export function CandidateProfilePage() {
   const moveCandidate = useDataStore((s) => s.moveCandidate)
   const rateCandidate = useDataStore((s) => s.rateCandidate)
   const archiveCandidate = useDataStore((s) => s.archiveCandidate)
+  const { can } = usePermissions()
+  const canManage = can('candidates.manage')
 
   const candidate = findCandidate(candidates, id)
 
@@ -110,36 +114,42 @@ export function CandidateProfilePage() {
             <RatingStars
               value={candidate.rating}
               size={18}
-              onChange={(r) => rateCandidate(candidate.id, r)}
+              onChange={
+                canManage ? (r) => rateCandidate(candidate.id, r) : undefined
+              }
             />
-            <div className="flex items-center gap-2">
-              <Select
-                value={candidate.stageId}
-                onValueChange={(v) => moveCandidate(candidate.id, v)}
-              >
-                <SelectTrigger className="w-40">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {DEFAULT_PIPELINE.map((s) => (
-                    <SelectItem key={s.id} value={s.id}>
-                      {s.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Button
-                variant="outline"
-                size="icon"
-                aria-label="Archive"
-                onClick={() => {
-                  archiveCandidate(candidate.id)
-                  navigate(ROUTES.candidates)
-                }}
-              >
-                <Archive className="size-4" />
-              </Button>
-            </div>
+            {canManage ? (
+              <div className="flex items-center gap-2">
+                <Select
+                  value={candidate.stageId}
+                  onValueChange={(v) => moveCandidate(candidate.id, v)}
+                >
+                  <SelectTrigger className="w-40">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {DEFAULT_PIPELINE.map((s) => (
+                      <SelectItem key={s.id} value={s.id}>
+                        {s.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  aria-label="Archive"
+                  onClick={() => {
+                    archiveCandidate(candidate.id)
+                    navigate(ROUTES.candidates)
+                  }}
+                >
+                  <Archive className="size-4" />
+                </Button>
+              </div>
+            ) : (
+              <StatusBadge kind="stage" value={candidate.stageId} />
+            )}
           </div>
         </CardContent>
       </Card>

@@ -19,6 +19,7 @@ import { formatDate, formatTime } from '@/lib/format'
 import { INTERVIEWERS } from '@/lib/data/team'
 import { ROUTES } from '@/lib/routes'
 import type { Interview } from '@/lib/types'
+import { usePermissions } from '@/hooks/usePermissions'
 import { useDataStore } from '@/stores/useDataStore'
 import { findCandidate, findJob, teamMember } from '@/stores/selectors'
 
@@ -83,6 +84,7 @@ function InterviewRow({ interview }: { interview: Interview }) {
 
 export function InterviewsPage() {
   const interviews = useDataStore((s) => s.interviews)
+  const { can } = usePermissions()
   const [status, setStatus] = useState('all')
   const [interviewer, setInterviewer] = useState('all')
 
@@ -115,12 +117,14 @@ export function InterviewsPage() {
         title="Interviews"
         description={`${upcoming.length} upcoming · ${past.length} past`}
         actions={
-          <Button asChild>
-            <Link to={ROUTES.interviewSchedule}>
-              <Plus className="size-4" />
-              Schedule
-            </Link>
-          </Button>
+          can('interviews.schedule') ? (
+            <Button asChild>
+              <Link to={ROUTES.interviewSchedule}>
+                <Plus className="size-4" />
+                Schedule
+              </Link>
+            </Button>
+          ) : undefined
         }
       />
 

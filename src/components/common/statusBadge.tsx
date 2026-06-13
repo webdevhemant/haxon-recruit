@@ -31,11 +31,21 @@ const REC_MAP: Record<string, { label: string; variant: Variant }> = {
   strong_no: { label: 'Strong No', variant: 'destructive' },
 }
 
+const STAGE_MAP: Record<string, { label: string; variant: Variant }> = {
+  applied: { label: 'Applied', variant: 'outline' },
+  screening: { label: 'Screening', variant: 'secondary' },
+  interview: { label: 'Interview', variant: 'default' },
+  onsite: { label: 'Onsite', variant: 'default' },
+  offer: { label: 'Offer', variant: 'warning' },
+  hired: { label: 'Hired', variant: 'success' },
+}
+
 const MAPS = {
   job: JOB_MAP,
   offer: OFFER_MAP,
   interview: INTERVIEW_MAP,
   recommendation: REC_MAP,
+  stage: STAGE_MAP,
 }
 
 interface StatusBadgeProps {

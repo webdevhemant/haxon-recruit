@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Check, Plus, Send } from 'lucide-react'
+import { Check, MoreHorizontal, Plus, Send, X } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -12,6 +12,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import {
   Table,
   TableBody,
@@ -25,14 +31,17 @@ import { StatusBadge } from '@/components/common/statusBadge'
 import { EmptyState } from '@/components/common/emptyState'
 import { formatCurrency, formatDate } from '@/lib/format'
 import { ROUTES } from '@/lib/routes'
+import { usePermissions } from '@/hooks/usePermissions'
 import { useDataStore } from '@/stores/useDataStore'
 import { findCandidate, findJob } from '@/stores/selectors'
 
 export function OffersPage() {
   const { offers, candidates, jobs } = useDataStore()
   const updateOfferStatus = useDataStore((s) => s.updateOfferStatus)
+  const { can } = usePermissions()
   const [status, setStatus] = useState('all')
 
+  const manage = can('offers.manage')
   const filtered = offers.filter((o) => status === 'all' || o.status === status)
 
   return (
@@ -41,12 +50,14 @@ export function OffersPage() {
         title="Offers"
         description={`${offers.filter((o) => o.status === 'pending' || o.status === 'sent').length} awaiting response`}
         actions={
-          <Button asChild>
-            <Link to={ROUTES.offerNew}>
-              <Plus className="size-4" />
-              New offer
-            </Link>
-          </Button>
+          manage ? (
+            <Button asChild>
+              <Link to={ROUTES.offerNew}>
+                <Plus className="size-4" />
+                New offer
+              </Link>
+            </Button>
+          ) : undefined
         }
       />
 
@@ -124,27 +135,46 @@ export function OffersPage() {
                       )}
                     </TableCell>
                     <TableCell className="text-right">
-                      {actionable ? (
-                        offer.status === 'pending' ? (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => updateOfferStatus(offer.id, 'sent')}
-                          >
-                            <Send className="size-3.5" />
-                            Send
-                          </Button>
-                        ) : (
-                          <Button
-                            size="sm"
-                            onClick={() =>
-                              updateOfferStatus(offer.id, 'accepted')
-                            }
-                          >
-                            <Check className="size-3.5" />
-                            Mark accepted
-                          </Button>
-                        )
+                      {manage && actionable ? (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              className="size-8"
+                            >
+                              <MoreHorizontal className="size-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            {offer.status === 'pending' && (
+                              <DropdownMenuItem
+                                onSelect={() =>
+                                  updateOfferStatus(offer.id, 'sent')
+                                }
+                              >
+                                <Send className="size-4" />
+                                Send offer
+                              </DropdownMenuItem>
+                            )}
+                            <DropdownMenuItem
+                              onSelect={() =>
+                                updateOfferStatus(offer.id, 'accepted')
+                              }
+                            >
+                              <Check className="size-4" />
+                              Mark accepted
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onSelect={() =>
+                                updateOfferStatus(offer.id, 'declined')
+                              }
+                            >
+                              <X className="size-4" />
+                              Mark declined
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       ) : (
                         <span className="text-xs text-muted-foreground">—</span>
                       )}

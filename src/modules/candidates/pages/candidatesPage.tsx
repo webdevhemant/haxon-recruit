@@ -25,7 +25,7 @@ import { PageHeader } from '@/components/common/pageHeader'
 import { Pagination } from '@/components/common/pagination'
 import { SearchInput } from '@/components/common/searchInput'
 import { RatingStars } from '@/components/common/ratingStars'
-import { Badge } from '@/components/ui/badge'
+import { StatusBadge } from '@/components/common/statusBadge'
 import { EmptyState } from '@/components/common/emptyState'
 import { daysAgoLabel } from '@/lib/format'
 import { DEFAULT_PIPELINE, SOURCES } from '@/lib/data/constants'
@@ -254,7 +254,7 @@ export function CandidatesPage() {
                     {findJob(jobs, c.jobId)?.title ?? '—'}
                   </TableCell>
                   <TableCell>
-                    <Badge variant="secondary">{stageName(c.stageId)}</Badge>
+                    <StatusBadge kind="stage" value={c.stageId} />
                   </TableCell>
                   <TableCell className="text-muted-foreground">
                     {c.source}

@@ -28,6 +28,7 @@ import { cn } from '@/lib/utils'
 import { formatSalaryRange } from '@/lib/format'
 import { DEPARTMENTS } from '@/lib/data/constants'
 import { ROUTES } from '@/lib/routes'
+import { usePermissions } from '@/hooks/usePermissions'
 import { useDataStore } from '@/stores/useDataStore'
 import { candidatesForJob } from '@/stores/selectors'
 import { JobCard } from '../components/jobCard'
@@ -37,6 +38,7 @@ type View = 'table' | 'grid'
 export function JobsPage() {
   const { jobs, candidates } = useDataStore()
   const navigate = useNavigate()
+  const { can } = usePermissions()
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState('all')
   const [department, setDepartment] = useState('all')
@@ -69,12 +71,14 @@ export function JobsPage() {
         title="Jobs"
         description={`${jobs.filter((j) => j.status === 'open').length} open roles · ${jobs.length} total`}
         actions={
-          <Button asChild>
-            <Link to={ROUTES.jobNew}>
-              <Plus className="size-4" />
-              New job
-            </Link>
-          </Button>
+          can('jobs.create') ? (
+            <Button asChild>
+              <Link to={ROUTES.jobNew}>
+                <Plus className="size-4" />
+                New job
+              </Link>
+            </Button>
+          ) : undefined
         }
       />
 

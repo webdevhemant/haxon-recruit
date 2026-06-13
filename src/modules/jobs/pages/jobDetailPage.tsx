@@ -9,6 +9,7 @@ import { StatusBadge } from '@/components/common/statusBadge'
 import { EmptyState } from '@/components/common/emptyState'
 import { formatSalaryRange } from '@/lib/format'
 import { ROUTES } from '@/lib/routes'
+import { usePermissions } from '@/hooks/usePermissions'
 import { useDataStore } from '@/stores/useDataStore'
 import { candidatesForJob, findJob, teamMember } from '@/stores/selectors'
 import { PipelineKanban } from '../components/pipelineKanban'
@@ -42,6 +43,7 @@ function Person({ id, role }: { id: string; role: string }) {
 
 export function JobDetailPage() {
   const { id } = useParams()
+  const { can } = usePermissions()
   const { jobs, candidates } = useDataStore()
   const job = findJob(jobs, id)
 
@@ -89,10 +91,12 @@ export function JobDetailPage() {
             <Share2 className="size-4" />
             Share
           </Button>
-          <Button size="sm">
-            <Pencil className="size-4" />
-            Edit job
-          </Button>
+          {can('jobs.edit') && (
+            <Button size="sm">
+              <Pencil className="size-4" />
+              Edit job
+            </Button>
+          )}
         </div>
       </div>
 

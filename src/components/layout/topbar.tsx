@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { Bell, Menu, Plus, Search } from 'lucide-react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Bell, Menu, Search } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -19,8 +19,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { Badge } from '@/components/ui/badge'
 import { ROUTES } from '@/lib/routes'
-import { useAuthStore } from '@/stores/useAuthStore'
+import { ROLE_LABEL } from '@/lib/rbac'
+import { DEMO_USERS, useAuthStore } from '@/stores/useAuthStore'
 import { Brand } from './brand'
 import { SidebarNav } from './sidebarNav'
 
@@ -29,10 +31,16 @@ export function Topbar() {
   const navigate = useNavigate()
   const user = useAuthStore((s) => s.user)
   const logout = useAuthStore((s) => s.logout)
+  const loginAs = useAuthStore((s) => s.loginAs)
 
   const onSignOut = () => {
     logout()
     navigate(ROUTES.login)
+  }
+
+  const onSwitch = (id: string, role: string) => {
+    loginAs(id)
+    navigate(role === 'applicant' ? ROUTES.careers : ROUTES.dashboard)
   }
 
   return (
@@ -67,12 +75,6 @@ export function Topbar() {
       </div>
 
       <div className="ml-auto flex items-center gap-2">
-        <Button asChild size="sm" className="hidden sm:inline-flex">
-          <Link to={ROUTES.jobNew}>
-            <Plus className="size-4" />
-            New job
-          </Link>
-        </Button>
         <Button variant="ghost" size="icon" aria-label="Notifications">
           <Bell className="size-5" />
         </Button>
@@ -87,20 +89,39 @@ export function Topbar() {
               </Avatar>
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
+          <DropdownMenuContent align="end" className="w-64">
             <DropdownMenuLabel>
-              <p className="text-sm font-medium">{user?.name ?? 'Guest'}</p>
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-sm font-medium">{user?.name ?? 'Guest'}</p>
+                {user && (
+                  <Badge variant="secondary">{ROLE_LABEL[user.role]}</Badge>
+                )}
+              </div>
               <p className="text-xs text-muted-foreground">
                 {user?.email ?? 'Not signed in'}
               </p>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link to={ROUTES.settingsTeam}>Team settings</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link to={ROUTES.settingsCompany}>Company profile</Link>
-            </DropdownMenuItem>
+            <DropdownMenuLabel className="text-[11px] uppercase tracking-wide text-muted-foreground">
+              Switch role (demo)
+            </DropdownMenuLabel>
+            {DEMO_USERS.map((u) => (
+              <DropdownMenuItem
+                key={u.id}
+                onSelect={() => onSwitch(u.id, u.role)}
+                className="gap-2"
+              >
+                <Avatar className="size-6">
+                  <AvatarFallback className="text-[9px]">
+                    {u.initials}
+                  </AvatarFallback>
+                </Avatar>
+                <span className="flex-1 truncate">{u.name}</span>
+                <span className="text-xs text-muted-foreground">
+                  {ROLE_LABEL[u.role]}
+                </span>
+              </DropdownMenuItem>
+            ))}
             <DropdownMenuSeparator />
             <DropdownMenuItem onSelect={onSignOut}>Sign out</DropdownMenuItem>
           </DropdownMenuContent>

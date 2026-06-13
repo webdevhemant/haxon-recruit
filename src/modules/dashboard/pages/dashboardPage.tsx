@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { PageHeader } from '@/components/common/pageHeader'
 import { StatCard } from '@/components/common/statCard'
 import { ROUTES } from '@/lib/routes'
+import { usePermissions } from '@/hooks/usePermissions'
 import { useAuthStore } from '@/stores/useAuthStore'
 import { useDataStore } from '@/stores/useDataStore'
 import { upcomingInterviews } from '@/stores/selectors'
@@ -18,6 +19,7 @@ import {
 
 export function DashboardPage() {
   const user = useAuthStore((s) => s.user)
+  const { can } = usePermissions()
   const { jobs, candidates, interviews, offers } = useDataStore()
 
   const openJobs = jobs.filter((j) => j.status === 'open').length
@@ -40,12 +42,14 @@ export function DashboardPage() {
         title={`Welcome back, ${firstName}`}
         description="Here’s what’s happening across your hiring today."
         actions={
-          <Button asChild>
-            <Link to={ROUTES.jobNew}>
-              <Plus className="size-4" />
-              New job
-            </Link>
-          </Button>
+          can('jobs.create') ? (
+            <Button asChild>
+              <Link to={ROUTES.jobNew}>
+                <Plus className="size-4" />
+                New job
+              </Link>
+            </Button>
+          ) : undefined
         }
       />
 
