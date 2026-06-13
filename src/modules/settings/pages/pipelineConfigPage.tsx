@@ -1,9 +1,27 @@
+import { useState } from 'react'
+import {
+  DndContext,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from '@dnd-kit/core'
+import {
+  SortableContext,
+  arrayMove,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 import { GripVertical, Plus, X } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { cn } from '@/lib/utils'
 import { DEFAULT_PIPELINE, DISQUALIFY_REASONS } from '@/lib/data/constants'
+import type { PipelineStage } from '@/lib/types'
 import { SettingsTabs } from '../components/settingsTabs'
 
 const TYPE_VARIANT: Record<
@@ -16,7 +34,69 @@ const TYPE_VARIANT: Record<
   hired: 'success',
 }
 
+function SortableStage({
+  stage,
+  index,
+}: {
+  stage: PipelineStage
+  index: number
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: stage.id })
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={{ transform: CSS.Transform.toString(transform), transition }}
+      className={cn(
+        'flex items-center gap-3 rounded-lg border border-border bg-card p-3',
+        isDragging && 'z-10 shadow-lg ring-1 ring-primary',
+      )}
+    >
+      <button
+        {...attributes}
+        {...listeners}
+        className="cursor-grab touch-none text-muted-foreground active:cursor-grabbing"
+        aria-label="Drag to reorder"
+      >
+        <GripVertical className="size-4" />
+      </button>
+      <span className="flex size-6 items-center justify-center rounded-full bg-secondary text-xs font-medium">
+        {index + 1}
+      </span>
+      <span className="text-sm font-medium">{stage.name}</span>
+      <Badge
+        variant={TYPE_VARIANT[stage.type] ?? 'secondary'}
+        className="ml-auto capitalize"
+      >
+        {stage.type}
+      </Badge>
+    </div>
+  )
+}
+
 export function PipelineConfigPage() {
+  const [stages, setStages] = useState<PipelineStage[]>(DEFAULT_PIPELINE)
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+  )
+
+  const onDragEnd = (e: DragEndEvent) => {
+    const { active, over } = e
+    if (!over || active.id === over.id) return
+    setStages((items) => {
+      const from = items.findIndex((s) => s.id === active.id)
+      const to = items.findIndex((s) => s.id === over.id)
+      return arrayMove(items, from, to)
+    })
+  }
+
   return (
     <div>
       <SettingsTabs />
@@ -30,25 +110,27 @@ export function PipelineConfigPage() {
               Add stage
             </Button>
           </CardHeader>
-          <CardContent className="flex flex-col gap-2">
-            {DEFAULT_PIPELINE.map((s, i) => (
-              <div
-                key={s.id}
-                className="flex items-center gap-3 rounded-lg border border-border p-3"
+          <CardContent>
+            <p className="mb-3 text-sm text-muted-foreground">
+              Drag the handle to reorder how candidates flow through your
+              pipeline.
+            </p>
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={onDragEnd}
+            >
+              <SortableContext
+                items={stages.map((s) => s.id)}
+                strategy={verticalListSortingStrategy}
               >
-                <GripVertical className="size-4 cursor-grab text-muted-foreground" />
-                <span className="flex size-6 items-center justify-center rounded-full bg-secondary text-xs font-medium">
-                  {i + 1}
-                </span>
-                <span className="text-sm font-medium">{s.name}</span>
-                <Badge
-                  variant={TYPE_VARIANT[s.type] ?? 'secondary'}
-                  className="ml-auto capitalize"
-                >
-                  {s.type}
-                </Badge>
-              </div>
-            ))}
+                <div className="flex flex-col gap-2">
+                  {stages.map((stage, i) => (
+                    <SortableStage key={stage.id} stage={stage} index={i} />
+                  ))}
+                </div>
+              </SortableContext>
+            </DndContext>
           </CardContent>
         </Card>
 

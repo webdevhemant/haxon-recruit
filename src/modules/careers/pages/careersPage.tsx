@@ -12,7 +12,9 @@ import {
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { UserAvatar } from '@/components/common/userAvatar'
 import { COMPANY } from '@/lib/data/constants'
+import { TEAM } from '@/lib/data/team'
 import { ROUTES } from '@/lib/routes'
 import { useDataStore } from '@/stores/useDataStore'
 
@@ -60,28 +62,77 @@ export function CareersPage() {
           className="pointer-events-none absolute -right-40 -top-40 size-[480px] rounded-full opacity-30 blur-[130px]"
           style={{ background: 'hsl(var(--primary))' }}
         />
-        <div className="relative mx-auto max-w-6xl px-6 py-20 lg:py-28">
-          <Badge variant="secondary" className="mb-5">
-            {COMPANY.industry} · {COMPANY.sizeRange}
-          </Badge>
-          <h1 className="max-w-3xl font-display text-[clamp(2.5rem,6vw,4.5rem)] font-extrabold leading-[0.98] tracking-[-0.03em]">
-            Build the tools that
-            <br />
-            give teams their time back.
-          </h1>
-          <p className="mt-6 max-w-xl text-lg text-muted-foreground">
-            {COMPANY.mission}
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Button asChild size="lg">
-              <Link to={ROUTES.careersJobs}>
-                View open roles
-                <ArrowRight className="size-4" />
-              </Link>
-            </Button>
-            <Button asChild size="lg" variant="outline">
-              <a href="#benefits">Why {COMPANY.name}</a>
-            </Button>
+        <div className="relative mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 px-6 py-16 lg:grid-cols-2 lg:py-24">
+          <div>
+            <Badge variant="secondary" className="mb-5">
+              {COMPANY.industry} · {COMPANY.sizeRange}
+            </Badge>
+            <h1 className="font-display text-[clamp(2.25rem,4.2vw,3.5rem)] font-extrabold leading-[1.02] tracking-[-0.03em]">
+              Build the tools that give teams their time back.
+            </h1>
+            <p className="mt-5 max-w-md text-base text-muted-foreground sm:text-lg">
+              {COMPANY.mission}
+            </p>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Button asChild size="lg">
+                <Link to={ROUTES.careersJobs}>
+                  View open roles
+                  <ArrowRight className="size-4" />
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline">
+                <a href="#benefits">Why {COMPANY.name}</a>
+              </Button>
+            </div>
+          </div>
+
+          <div className="relative">
+            <Card className="p-6">
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Life at {COMPANY.name}
+              </p>
+              <div className="mt-5 grid grid-cols-3 gap-4">
+                {[
+                  ['4.8', 'Glassdoor'],
+                  ['92%', 'Would refer'],
+                  ['23d', 'Avg. to hire'],
+                ].map(([v, l]) => (
+                  <div key={l}>
+                    <p className="font-display text-2xl font-bold tracking-tight">
+                      {v}
+                    </p>
+                    <p className="mt-0.5 text-[11px] uppercase tracking-wide text-muted-foreground">
+                      {l}
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-6 border-t border-border pt-5">
+                <p className="mb-2 text-xs text-muted-foreground">Offices</p>
+                <div className="flex flex-wrap gap-2">
+                  {COMPANY.offices.map((o) => (
+                    <Badge key={o} variant="outline">
+                      {o}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+              <div className="mt-5 flex items-center gap-3 border-t border-border pt-5">
+                <div className="flex -space-x-2">
+                  {TEAM.slice(0, 5).map((m) => (
+                    <UserAvatar
+                      key={m.id}
+                      seed={m.id}
+                      initials={m.initials}
+                      className="size-8 ring-2 ring-card"
+                    />
+                  ))}
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Join {COMPANY.departments.length} teams across the company.
+                </p>
+              </div>
+            </Card>
           </div>
         </div>
       </section>
