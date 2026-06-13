@@ -1,73 +1,91 @@
-# React + TypeScript + Vite
+# Haxon Recruit
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-featured recruiting platform (ATS) demo built entirely on **dummy data** — no
+backend, no real auth, no APIs. It combines the best ideas from Ashby, Greenhouse and
+Lever into one cohesive, fast, and beautifully designed product, powered by an
+internally-consistent seeded dataset that persists to `localStorage`.
 
-Currently, two official plugins are available:
+> Built as a portfolio piece. Everything is interactive and stateful, but runs 100%
+> in the browser.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Highlights
 
-## React Compiler
+- **9 modules · 24+ routes**, from a marketing landing page to a deep admin back office.
+- **Drag-and-drop pipeline** (dnd-kit), candidate profiles, scorecards, offers.
+- **Analytics suite** with funnel, DEI and source reports (Recharts).
+- **Role-based access control** with a built-in role switcher (see below).
+- **Mock auth** (login / signup / forgot / reset) with a persisted current user.
+- **Camera-based "Join call"** mock, profile photos, scroll/page animations.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech stack
 
-## Expanding the ESLint configuration
+| Area        | Choice                                            |
+| ----------- | ------------------------------------------------- |
+| Framework   | Vite + React 19 + TypeScript                      |
+| Styling     | Tailwind CSS v3 + shadcn/ui + design tokens       |
+| State       | Zustand (+ `persist` to localStorage)             |
+| Routing     | React Router v7 (lazy-loaded, code-split routes)  |
+| Charts      | Recharts                                          |
+| Drag & drop | @dnd-kit                                           |
+| Forms       | React Hook Form + Zod                             |
+| Motion      | Motion (Framer Motion)                            |
+| Icons       | lucide-react                                      |
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Getting started
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Requires **Node 22+** and **pnpm**.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+pnpm install
+pnpm dev        # start the dev server
+pnpm build      # type-check + production build
+pnpm format     # prettier
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Role-based access control (RBAC)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+The app ships with five roles. Use the **avatar menu (top-right) → "Switch role (demo)"**
+to instantly sign in as a named user for each role and watch the navigation, actions and
+accessible routes change.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+| Role              | Demo user      | Can do                                                                 |
+| ----------------- | -------------- | --------------------------------------------------------------------- |
+| **Admin**         | Alex Tran      | Everything, including org **Settings**.                               |
+| **Recruiter**     | Priya Nair     | Full pipeline (jobs, candidates, interviews, offers, analytics). No settings. |
+| **Hiring Manager**| James Okoro    | Review candidates, interviews and offers; no job creation/edit, no offer management, no settings. |
+| **Interviewer**   | Elena Vasquez  | Dashboard, view candidates, view interviews, submit scorecards only. |
+| **Applicant**     | Jordan Blake   | Only the public **Careers** site — redirected away from the internal app. |
+
+Permissions are defined in [`src/lib/rbac.ts`](src/lib/rbac.ts) and enforced in three places:
+
+1. **Navigation** — the sidebar only shows sections the role can access.
+2. **Actions** — buttons (New job, Edit, Schedule, offer actions, candidate stage moves…)
+   are hidden or disabled per permission. Table action menus stay visible but disable the
+   options a role can't perform.
+3. **Routes** — `AppLayout` redirects to an allowed page if a role opens a restricted URL,
+   and sends applicants to the careers site.
+
+## Project structure
+
 ```
+src/
+  app/               # router + global providers
+  components/
+    ui/              # shadcn primitives (kebab-case, library convention)
+    common/          # shared building blocks (PageHeader, StatCard, UserAvatar, …)
+    layout/          # app shell: sidebar, topbar, layouts
+  hooks/             # usePermissions, …
+  lib/               # types, rbac, routes, formatters, seed data
+  modules/           # feature modules (landing, auth, dashboard, jobs,
+                     # candidates, interviews, offers, analytics, careers, settings)
+  stores/            # zustand stores (data + auth) and selectors
+```
+
+Authored files use **camelCase**; shadcn `components/ui/*` keep their kebab-case names.
+
+## Seeded data
+
+A deterministic generator ([`src/lib/data`](src/lib/data)) creates a consistent world:
+Nexaflow Inc., 18 jobs, ~120 candidates, 45 interviews, scorecards, 8 offers and a 10-person
+team — the same people appear across jobs, pipelines, scorecards and offers. Mutations
+persist to `localStorage`; clearing storage resets to the seed.
