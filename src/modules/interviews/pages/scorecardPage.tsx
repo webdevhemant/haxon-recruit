@@ -13,7 +13,12 @@ import { formatDate } from '@/lib/format'
 import { ROUTES } from '@/lib/routes'
 import type { Recommendation, ScorecardAttribute } from '@/lib/types'
 import { useDataStore } from '@/stores/useDataStore'
-import { findCandidate, findJob } from '@/stores/selectors'
+import {
+  findCandidate,
+  findJob,
+  scorecardsForCandidate,
+} from '@/stores/selectors'
+import { CandidateScorecards } from '@/modules/candidates/components/candidateScorecards'
 
 const ATTRIBUTES = [
   'Technical depth',
@@ -51,10 +56,14 @@ export function ScorecardPage() {
   const { interviews, candidates, jobs } = useDataStore()
   const addScorecard = useDataStore((s) => s.addScorecard)
 
+  const allScorecards = useDataStore((s) => s.scorecards)
   const interview = interviews.find((i) => i.id === id)
   const candidate =
     interview && findCandidate(candidates, interview.candidateId)
   const job = interview && findJob(jobs, interview.jobId)
+  const existing = candidate
+    ? scorecardsForCandidate(allScorecards, candidate.id)
+    : []
 
   const [scores, setScores] = useState<Record<string, number>>({})
   const [rec, setRec] = useState<Recommendation | null>(null)
@@ -116,6 +125,19 @@ export function ScorecardPage() {
           </div>
         </CardContent>
       </Card>
+
+      {existing.length > 0 && (
+        <div className="mb-8">
+          <h2 className="mb-3 text-sm font-semibold text-muted-foreground">
+            Feedback from others ({existing.length})
+          </h2>
+          <CandidateScorecards scorecards={existing} />
+        </div>
+      )}
+
+      <h2 className="mb-3 text-sm font-semibold text-muted-foreground">
+        Your scorecard
+      </h2>
 
       <Card>
         <CardHeader>

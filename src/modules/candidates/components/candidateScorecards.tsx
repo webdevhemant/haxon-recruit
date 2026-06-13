@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { UserAvatar } from '@/components/common/userAvatar'
 import { Card, CardContent } from '@/components/ui/card'
 import { StatusBadge } from '@/components/common/statusBadge'
 import { EmptyState } from '@/components/common/emptyState'
@@ -48,11 +48,11 @@ export function CandidateScorecards({
             <CardContent className="p-5">
               <div className="mb-4 flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <Avatar className="size-8">
-                    <AvatarFallback className="text-[10px]">
-                      {interviewer?.initials}
-                    </AvatarFallback>
-                  </Avatar>
+                  <UserAvatar
+                    seed={s.interviewerId}
+                    initials={interviewer?.initials ?? '?'}
+                    className="size-8"
+                  />
                   <div>
                     <p className="text-sm font-medium leading-tight">
                       {interviewer?.name}

@@ -2,9 +2,10 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ClipboardCheck, Plus, Video } from 'lucide-react'
 
+import { VideoCallDialog } from '../components/videoCallDialog'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { UserAvatar } from '@/components/common/userAvatar'
 import {
   Select,
   SelectContent,
@@ -27,6 +28,7 @@ function InterviewRow({ interview }: { interview: Interview }) {
   const { candidates, jobs } = useDataStore()
   const candidate = findCandidate(candidates, interview.candidateId)
   const job = findJob(jobs, interview.jobId)
+  const [callOpen, setCallOpen] = useState(false)
   const upcoming =
     new Date(interview.scheduledAt).getTime() >= Date.now() - 3600_000
 
@@ -55,17 +57,18 @@ function InterviewRow({ interview }: { interview: Interview }) {
       </div>
       <div className="flex -space-x-2">
         {interview.interviewerIds.map((iid) => (
-          <Avatar key={iid} className="size-7 ring-2 ring-card">
-            <AvatarFallback className="text-[10px]">
-              {teamMember(iid)?.initials}
-            </AvatarFallback>
-          </Avatar>
+          <UserAvatar
+            key={iid}
+            seed={iid}
+            initials={teamMember(iid)?.initials ?? '?'}
+            className="size-7 ring-2 ring-card"
+          />
         ))}
       </div>
       <StatusBadge kind="interview" value={interview.status} />
       <div className="flex gap-2">
         {upcoming && interview.status !== 'cancelled' ? (
-          <Button size="sm" variant="outline">
+          <Button size="sm" variant="outline" onClick={() => setCallOpen(true)}>
             <Video className="size-4" />
             Join
           </Button>
@@ -78,6 +81,13 @@ function InterviewRow({ interview }: { interview: Interview }) {
           </Button>
         )}
       </div>
+
+      <VideoCallDialog
+        open={callOpen}
+        onOpenChange={setCallOpen}
+        candidateName={candidate?.name ?? 'Candidate'}
+        subtitle={`${interview.type} · ${job?.title ?? ''}`}
+      />
     </div>
   )
 }

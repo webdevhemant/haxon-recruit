@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { UserAvatar } from '@/components/common/userAvatar'
 import {
   Sheet,
   SheetContent,
@@ -84,9 +84,10 @@ export function Topbar() {
               className="rounded-full focus:outline-none focus:ring-2 focus:ring-ring"
               aria-label="Account menu"
             >
-              <Avatar>
-                <AvatarFallback>{user?.initials ?? 'U'}</AvatarFallback>
-              </Avatar>
+              <UserAvatar
+                seed={user?.id ?? 'guest'}
+                initials={user?.initials ?? 'U'}
+              />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-64">
@@ -111,11 +112,11 @@ export function Topbar() {
                 onSelect={() => onSwitch(u.id, u.role)}
                 className="gap-2"
               >
-                <Avatar className="size-6">
-                  <AvatarFallback className="text-[9px]">
-                    {u.initials}
-                  </AvatarFallback>
-                </Avatar>
+                <UserAvatar
+                  seed={u.id}
+                  initials={u.initials}
+                  className="size-6"
+                />
                 <span className="flex-1 truncate">{u.name}</span>
                 <span className="text-xs text-muted-foreground">
                   {ROLE_LABEL[u.role]}

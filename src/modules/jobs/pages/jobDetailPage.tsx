@@ -4,7 +4,7 @@ import { ArrowLeft, Pencil, Share2, Users } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { UserAvatar } from '@/components/common/userAvatar'
 import { StatusBadge } from '@/components/common/statusBadge'
 import { EmptyState } from '@/components/common/emptyState'
 import { formatSalaryRange } from '@/lib/format'
@@ -28,11 +28,11 @@ function Person({ id, role }: { id: string; role: string }) {
   if (!member) return null
   return (
     <div className="flex items-center gap-2.5">
-      <Avatar className="size-8">
-        <AvatarFallback className="text-[10px]">
-          {member.initials}
-        </AvatarFallback>
-      </Avatar>
+      <UserAvatar
+        seed={member.id}
+        initials={member.initials}
+        className="size-8"
+      />
       <div className="text-sm">
         <p className="font-medium leading-tight">{member.name}</p>
         <p className="text-xs text-muted-foreground">{role}</p>

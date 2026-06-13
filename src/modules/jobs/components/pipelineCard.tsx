@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { UserAvatar } from '@/components/common/userAvatar'
 import { RatingStars } from '@/components/common/ratingStars'
 import { Badge } from '@/components/ui/badge'
 import { daysAgoLabel } from '@/lib/format'
@@ -20,11 +20,11 @@ export function PipelineCard({ candidate, dragging }: PipelineCardProps) {
       }`}
     >
       <div className="flex items-start gap-2.5">
-        <Avatar className="size-8">
-          <AvatarFallback className="text-[10px]">
-            {candidate.initials}
-          </AvatarFallback>
-        </Avatar>
+        <UserAvatar
+          seed={candidate.id}
+          initials={candidate.initials}
+          className="size-8"
+        />
         <div className="min-w-0 flex-1">
           <Link
             to={ROUTES.candidateDetail(candidate.id)}

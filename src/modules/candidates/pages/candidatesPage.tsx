@@ -4,7 +4,7 @@ import { ArrowUpDown, Download, Archive } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { UserAvatar } from '@/components/common/userAvatar'
 import { Card } from '@/components/ui/card'
 import {
   Select,
@@ -237,11 +237,11 @@ export function CandidatesPage() {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2.5">
-                      <Avatar className="size-8">
-                        <AvatarFallback className="text-[10px]">
-                          {c.initials}
-                        </AvatarFallback>
-                      </Avatar>
+                      <UserAvatar
+                        seed={c.id}
+                        initials={c.initials}
+                        className="size-8"
+                      />
                       <div>
                         <p className="font-medium leading-tight">{c.name}</p>
                         <p className="text-xs text-muted-foreground">

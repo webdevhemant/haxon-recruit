@@ -1,10 +1,4 @@
-import {
-  ClipboardCheck,
-  FileText,
-  PartyPopper,
-  UserPlus,
-  type LucideIcon,
-} from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 import {
   Card,
@@ -13,21 +7,24 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { cn } from '@/lib/utils'
+import { UserAvatar } from '@/components/common/userAvatar'
 import { daysAgoLabel, RECOMMENDATION_LABEL } from '@/lib/format'
+import { ROUTES } from '@/lib/routes'
 import { useDataStore } from '@/stores/useDataStore'
-import { findCandidate, teamName } from '@/stores/selectors'
+import { findCandidate, findJob, teamMember } from '@/stores/selectors'
 
 interface Activity {
   id: string
-  icon: LucideIcon
-  tone: string
-  text: string
+  actorSeed: string
+  actorInitials: string
+  actorName: string
+  action: string
+  to?: string
   days: number
 }
 
 export function ActivityFeed() {
-  const { candidates, scorecards, offers } = useDataStore()
+  const { candidates, scorecards, offers, jobs } = useDataStore()
 
   const events: Activity[] = []
 
@@ -35,21 +32,26 @@ export function ActivityFeed() {
     if (c.appliedDaysAgo <= 7 && !c.archived) {
       events.push({
         id: `app-${c.id}`,
-        icon: UserPlus,
-        tone: 'text-primary bg-primary/10',
-        text: `${c.name} applied via ${c.source}`,
+        actorSeed: c.id,
+        actorInitials: c.initials,
+        actorName: c.name,
+        action: `applied via ${c.source}`,
+        to: ROUTES.candidateDetail(c.id),
         days: c.appliedDaysAgo,
       })
     }
   }
   for (const s of scorecards) {
     const c = findCandidate(candidates, s.candidateId)
-    if (!c || s.submittedDaysAgo > 10) continue
+    const m = teamMember(s.interviewerId)
+    if (!c || !m || s.submittedDaysAgo > 10) continue
     events.push({
       id: `sc-${s.id}`,
-      icon: ClipboardCheck,
-      tone: 'text-warning bg-warning/10',
-      text: `${teamName(s.interviewerId)} scored ${c.name} — ${RECOMMENDATION_LABEL[s.recommendation]}`,
+      actorSeed: m.id,
+      actorInitials: m.initials,
+      actorName: m.name,
+      action: `scored ${c.name} — ${RECOMMENDATION_LABEL[s.recommendation]}`,
+      to: ROUTES.candidateDetail(c.id),
       days: s.submittedDaysAgo,
     })
   }
@@ -59,17 +61,22 @@ export function ActivityFeed() {
     if (o.status === 'accepted') {
       events.push({
         id: `of-${o.id}`,
-        icon: PartyPopper,
-        tone: 'text-success bg-success/10',
-        text: `${c.name} accepted their offer`,
+        actorSeed: c.id,
+        actorInitials: c.initials,
+        actorName: c.name,
+        action: 'accepted their offer',
+        to: ROUTES.offers,
         days: 2,
       })
     } else if (o.status === 'sent' || o.status === 'pending') {
+      const recruiter = teamMember(findJob(jobs, o.jobId)?.recruiterId ?? '')
       events.push({
         id: `of-${o.id}`,
-        icon: FileText,
-        tone: 'text-primary bg-primary/10',
-        text: `Offer sent to ${c.name}`,
+        actorSeed: recruiter?.id ?? 'system',
+        actorInitials: recruiter?.initials ?? 'HR',
+        actorName: recruiter?.name ?? 'Recruiter',
+        action: `sent an offer to ${c.name}`,
+        to: ROUTES.offers,
         days: 1,
       })
     }
@@ -81,26 +88,31 @@ export function ActivityFeed() {
     <Card>
       <CardHeader>
         <CardTitle>Recent activity</CardTitle>
-        <CardDescription>What’s happening across hiring</CardDescription>
+        <CardDescription>Who changed what across hiring</CardDescription>
       </CardHeader>
       <CardContent>
-        <ol className="relative flex flex-col gap-4 before:absolute before:left-[15px] before:top-2 before:h-[calc(100%-1rem)] before:w-px before:bg-border">
+        <ol className="flex flex-col gap-1">
           {feed.map((e) => (
-            <li key={e.id} className="relative flex items-start gap-3">
-              <span
-                className={cn(
-                  'z-10 flex size-8 shrink-0 items-center justify-center rounded-full ring-4 ring-card',
-                  e.tone,
-                )}
+            <li key={e.id}>
+              <Link
+                to={e.to ?? ROUTES.dashboard}
+                className="flex items-start gap-3 rounded-lg px-2 py-2 transition-colors hover:bg-secondary"
               >
-                <e.icon className="size-4" />
-              </span>
-              <div className="pt-1">
-                <p className="text-sm leading-snug">{e.text}</p>
-                <p className="text-xs text-muted-foreground">
-                  {daysAgoLabel(e.days)}
-                </p>
-              </div>
+                <UserAvatar
+                  seed={e.actorSeed}
+                  initials={e.actorInitials}
+                  className="size-8"
+                />
+                <div className="min-w-0 pt-0.5">
+                  <p className="text-sm leading-snug">
+                    <span className="font-medium">{e.actorName}</span>{' '}
+                    <span className="text-muted-foreground">{e.action}</span>
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {daysAgoLabel(e.days)}
+                  </p>
+                </div>
+              </Link>
             </li>
           ))}
         </ol>

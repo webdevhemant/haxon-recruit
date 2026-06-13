@@ -3,7 +3,7 @@ import { Archive, ArrowLeft, Mail, MapPin } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { UserAvatar } from '@/components/common/userAvatar'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
@@ -87,9 +87,11 @@ export function CandidateProfilePage() {
       <Card className="mb-6">
         <CardContent className="flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
-            <Avatar className="size-14">
-              <AvatarFallback>{candidate.initials}</AvatarFallback>
-            </Avatar>
+            <UserAvatar
+              seed={candidate.id}
+              initials={candidate.initials}
+              className="size-14"
+            />
             <div>
               <h1 className="font-display text-xl font-bold tracking-tight">
                 {candidate.name}

@@ -1,4 +1,5 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
+import { motion } from 'motion/react'
 
 import type { Permission } from '@/lib/rbac'
 import { ROUTES } from '@/lib/routes'
@@ -51,7 +52,14 @@ export function AppLayout() {
       <div className="flex min-h-screen flex-col lg:pl-64">
         <Topbar />
         <main className="flex-1 px-4 py-6 lg:px-8 lg:py-8">
-          <Outlet />
+          <motion.div
+            key={pathname}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <Outlet />
+          </motion.div>
         </main>
       </div>
     </div>

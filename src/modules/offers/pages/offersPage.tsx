@@ -4,7 +4,7 @@ import { Check, MoreHorizontal, Plus, Send, X } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { UserAvatar } from '@/components/common/userAvatar'
 import {
   Select,
   SelectContent,
@@ -106,11 +106,11 @@ export function OffersPage() {
                   <TableRow key={offer.id}>
                     <TableCell>
                       <div className="flex items-center gap-2.5">
-                        <Avatar className="size-8">
-                          <AvatarFallback className="text-[10px]">
-                            {candidate?.initials}
-                          </AvatarFallback>
-                        </Avatar>
+                        <UserAvatar
+                          seed={candidate?.id ?? offer.id}
+                          initials={candidate?.initials ?? '?'}
+                          className="size-8"
+                        />
                         <span className="font-medium">{candidate?.name}</span>
                       </div>
                     </TableCell>
@@ -135,49 +135,45 @@ export function OffersPage() {
                       )}
                     </TableCell>
                     <TableCell className="text-right">
-                      {manage && actionable ? (
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              size="icon"
-                              variant="ghost"
-                              className="size-8"
-                            >
-                              <MoreHorizontal className="size-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            {offer.status === 'pending' && (
-                              <DropdownMenuItem
-                                onSelect={() =>
-                                  updateOfferStatus(offer.id, 'sent')
-                                }
-                              >
-                                <Send className="size-4" />
-                                Send offer
-                              </DropdownMenuItem>
-                            )}
-                            <DropdownMenuItem
-                              onSelect={() =>
-                                updateOfferStatus(offer.id, 'accepted')
-                              }
-                            >
-                              <Check className="size-4" />
-                              Mark accepted
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onSelect={() =>
-                                updateOfferStatus(offer.id, 'declined')
-                              }
-                            >
-                              <X className="size-4" />
-                              Mark declined
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      ) : (
-                        <span className="text-xs text-muted-foreground">—</span>
-                      )}
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="size-8"
+                            aria-label="Offer actions"
+                          >
+                            <MoreHorizontal className="size-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem
+                            disabled={!manage || offer.status !== 'pending'}
+                            onSelect={() => updateOfferStatus(offer.id, 'sent')}
+                          >
+                            <Send className="size-4" />
+                            Send offer
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            disabled={!manage || !actionable}
+                            onSelect={() =>
+                              updateOfferStatus(offer.id, 'accepted')
+                            }
+                          >
+                            <Check className="size-4" />
+                            Mark accepted
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            disabled={!manage || !actionable}
+                            onSelect={() =>
+                              updateOfferStatus(offer.id, 'declined')
+                            }
+                          >
+                            <X className="size-4" />
+                            Mark declined
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </TableCell>
                   </TableRow>
                 )
