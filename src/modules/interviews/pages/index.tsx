@@ -1,5 +1,7 @@
 import { PagePlaceholder } from '@/components/common/pagePlaceholder'
 
+export { ScorecardPage } from './scorecardPage'
+
 export function InterviewsPage() {
   return (
     <PagePlaceholder
@@ -14,15 +16,6 @@ export function ScheduleInterviewPage() {
     <PagePlaceholder
       title="Schedule Interview"
       description="Pick candidate, stage and interviewers, then choose a time slot."
-    />
-  )
-}
-
-export function ScorecardPage() {
-  return (
-    <PagePlaceholder
-      title="Scorecard"
-      description="Submit structured ratings and an overall recommendation."
     />
   )
 }

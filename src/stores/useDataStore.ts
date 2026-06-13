@@ -15,6 +15,10 @@ interface DataState {
   archiveCandidate: (candidateId: string) => void
   rateCandidate: (candidateId: string, rating: number) => void
   addJob: (job: Job) => void
+  addScorecard: (scorecard: Scorecard) => void
+  addInterview: (interview: Interview) => void
+  addOffer: (offer: Offer) => void
+  updateOfferStatus: (offerId: string, status: Offer['status']) => void
   resetSeed: () => void
 }
 
@@ -53,6 +57,21 @@ export const useDataStore = create<DataState>()(
         })),
 
       addJob: (job) => set((s) => ({ jobs: [job, ...s.jobs] })),
+
+      addScorecard: (scorecard) =>
+        set((s) => ({ scorecards: [scorecard, ...s.scorecards] })),
+
+      addInterview: (interview) =>
+        set((s) => ({ interviews: [interview, ...s.interviews] })),
+
+      addOffer: (offer) => set((s) => ({ offers: [offer, ...s.offers] })),
+
+      updateOfferStatus: (offerId, status) =>
+        set((s) => ({
+          offers: s.offers.map((o) =>
+            o.id === offerId ? { ...o, status } : o,
+          ),
+        })),
 
       resetSeed: () => set(seedSlice()),
     }),
