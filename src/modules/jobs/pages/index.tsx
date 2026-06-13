@@ -1,15 +1,7 @@
 import { PagePlaceholder } from '@/components/common/pagePlaceholder'
 
 export { JobsPage } from './jobsPage'
-
-export function JobDetailPage() {
-  return (
-    <PagePlaceholder
-      title="Job Detail"
-      description="Pipeline kanban for this role, candidate counts per stage and job details."
-    />
-  )
-}
+export { JobDetailPage } from './jobDetailPage'
 
 export function CreateJobPage() {
   return (
