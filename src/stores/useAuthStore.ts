@@ -73,6 +73,7 @@ interface AuthState {
   login: (email: string, name?: string) => void
   signup: (name: string, email: string) => void
   loginAs: (userId: string) => void
+  updateProfile: (changes: { name: string; email: string }) => void
   logout: () => void
 }
 
@@ -102,6 +103,19 @@ export const useAuthStore = create<AuthState>()(
         }),
       loginAs: (userId) =>
         set({ user: DEMO_USERS.find((u) => u.id === userId) ?? ADMIN }),
+      updateProfile: ({ name, email }) =>
+        set((s) =>
+          s.user
+            ? {
+                user: {
+                  ...s.user,
+                  name,
+                  email,
+                  initials: initials(name),
+                },
+              }
+            : s,
+        ),
       logout: () => set({ user: null }),
     }),
     { name: 'haxon-recruit-auth', version: 2 },

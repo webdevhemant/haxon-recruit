@@ -14,6 +14,13 @@ export const router = createBrowserRouter([
     },
   },
   {
+    path: ROUTES.account,
+    lazy: async () => {
+      const m = await import('@/modules/account/pages/accountPage')
+      return { Component: m.AccountPage }
+    },
+  },
+  {
     lazy: async () => {
       const m = await import('@/modules/auth/components/authLayout')
       return { Component: m.AuthLayout }

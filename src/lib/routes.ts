@@ -6,6 +6,8 @@ export const ROUTES = {
   forgotPassword: '/forgot-password',
   resetPassword: '/reset-password',
 
+  account: '/account',
+
   dashboard: '/dashboard',
 
   jobs: '/jobs',

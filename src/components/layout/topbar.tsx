@@ -103,6 +103,10 @@ export function Topbar() {
               </p>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
+            <DropdownMenuItem onSelect={() => navigate(ROUTES.account)}>
+              View profile
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
             <DropdownMenuLabel className="text-[11px] uppercase tracking-wide text-muted-foreground">
               Switch role (demo)
             </DropdownMenuLabel>
