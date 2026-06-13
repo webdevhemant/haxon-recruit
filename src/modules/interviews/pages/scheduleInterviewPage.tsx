@@ -4,9 +4,9 @@ import { ArrowLeft, Video } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
+import { DatePicker } from '@/components/ui/date-picker'
 import { Card, CardContent } from '@/components/ui/card'
 import {
   Select,
@@ -42,7 +42,7 @@ export function ScheduleInterviewPage() {
   const [candidateId, setCandidateId] = useState('')
   const [type, setType] = useState<InterviewType>('Technical')
   const [interviewerIds, setInterviewerIds] = useState<string[]>([])
-  const [date, setDate] = useState('')
+  const [date, setDate] = useState<Date | undefined>()
   const [slot, setSlot] = useState('10:00')
 
   const candidate = candidates.find((c) => c.id === candidateId)
@@ -56,7 +56,7 @@ export function ScheduleInterviewPage() {
   const canSchedule = candidateId && date && slot && interviewerIds.length > 0
 
   const schedule = () => {
-    if (!candidate || !canSchedule) return
+    if (!candidate || !canSchedule || !date) return
     const [h, m] = slot.split(':')
     const dt = new Date(date)
     dt.setHours(Number(h), Number(m), 0, 0)
@@ -153,12 +153,11 @@ export function ScheduleInterviewPage() {
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="date">Date</Label>
-              <Input
-                id="date"
-                type="date"
+              <Label>Date</Label>
+              <DatePicker
                 value={date}
-                onChange={(e) => setDate(e.target.value)}
+                onChange={setDate}
+                disabled={(d) => d < new Date(new Date().setHours(0, 0, 0, 0))}
               />
             </div>
             <div className="flex flex-col gap-1.5">

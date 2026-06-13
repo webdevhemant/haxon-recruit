@@ -6,6 +6,7 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { DatePicker } from '@/components/ui/date-picker'
 import { Card, CardContent } from '@/components/ui/card'
 import {
   Select,
@@ -41,7 +42,7 @@ export function CreateOfferPage() {
   const [base, setBase] = useState('150000')
   const [bonus, setBonus] = useState('10')
   const [equity, setEquity] = useState('0.1')
-  const [startDate, setStartDate] = useState('')
+  const [startDate, setStartDate] = useState<Date | undefined>()
 
   const candidate = candidates.find((c) => c.id === candidateId)
   const job = candidate && findJob(jobs, candidate.jobId)
@@ -59,7 +60,7 @@ export function CreateOfferPage() {
       bonusPct: Number(bonus) || 0,
       equityPct: Number(equity) || 0,
       startDate: startDate
-        ? new Date(startDate).toISOString()
+        ? startDate.toISOString()
         : new Date(Date.now() + 30 * 86400000).toISOString(),
       expiresInDays: 7,
     })
@@ -163,12 +164,13 @@ export function CreateOfferPage() {
                 </div>
               </div>
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="start">Start date</Label>
-                <Input
-                  id="start"
-                  type="date"
+                <Label>Start date</Label>
+                <DatePicker
                   value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
+                  onChange={setStartDate}
+                  disabled={(d) =>
+                    d < new Date(new Date().setHours(0, 0, 0, 0))
+                  }
                 />
               </div>
             </div>
@@ -219,7 +221,7 @@ export function CreateOfferPage() {
                   label="Start date"
                   value={
                     startDate
-                      ? formatDate(new Date(startDate).toISOString())
+                      ? formatDate(startDate.toISOString())
                       : 'To be confirmed'
                   }
                 />

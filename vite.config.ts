@@ -21,6 +21,8 @@ export default defineConfig({
       'motion/react',
       'recharts',
       'sonner',
+      'react-day-picker',
+      'date-fns',
       'lucide-react',
       'class-variance-authority',
       'clsx',
