@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { LayoutGrid, Plus, Table2 } from 'lucide-react'
 
@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/table'
 import { Card } from '@/components/ui/card'
 import { PageHeader } from '@/components/common/pageHeader'
+import { Pagination } from '@/components/common/pagination'
 import { SearchInput } from '@/components/common/searchInput'
 import { StatusBadge } from '@/components/common/statusBadge'
 import { EmptyState } from '@/components/common/emptyState'
@@ -47,6 +48,9 @@ export function JobsPage() {
     return map
   }, [jobs, candidates])
 
+  const [page, setPage] = useState(1)
+  const pageSize = 10
+
   const filtered = jobs.filter((j) => {
     if (status !== 'all' && j.status !== status) return false
     if (department !== 'all' && j.department !== department) return false
@@ -54,6 +58,10 @@ export function JobsPage() {
       return false
     return true
   })
+
+  useEffect(() => setPage(1), [search, status, department, view])
+
+  const pagedTable = filtered.slice((page - 1) * pageSize, page * pageSize)
 
   return (
     <div>
@@ -156,7 +164,7 @@ export function JobsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filtered.map((job) => (
+              {pagedTable.map((job) => (
                 <TableRow
                   key={job.id}
                   className="cursor-pointer"
@@ -194,6 +202,12 @@ export function JobsPage() {
               ))}
             </TableBody>
           </Table>
+          <Pagination
+            page={page}
+            pageSize={pageSize}
+            total={filtered.length}
+            onPageChange={setPage}
+          />
         </Card>
       )}
     </div>

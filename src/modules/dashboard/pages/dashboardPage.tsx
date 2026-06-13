@@ -11,6 +11,10 @@ import { upcomingInterviews } from '@/stores/selectors'
 import { UpcomingInterviews } from '../components/upcomingInterviews'
 import { ActivityFeed } from '../components/activityFeed'
 import { PipelineSnapshot } from '../components/pipelineSnapshot'
+import {
+  HiringTrendChart,
+  SourceBreakdownChart,
+} from '../components/dashboardCharts'
 
 export function DashboardPage() {
   const user = useAuthStore((s) => s.user)
@@ -72,6 +76,11 @@ export function DashboardPage() {
           delta={4}
           hint="vs last quarter"
         />
+      </div>
+
+      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <HiringTrendChart />
+        <SourceBreakdownChart />
       </div>
 
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">

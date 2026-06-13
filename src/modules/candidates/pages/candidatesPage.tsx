@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowUpDown, Download, Archive } from 'lucide-react'
 
@@ -22,6 +22,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { PageHeader } from '@/components/common/pageHeader'
+import { Pagination } from '@/components/common/pagination'
 import { SearchInput } from '@/components/common/searchInput'
 import { RatingStars } from '@/components/common/ratingStars'
 import { Badge } from '@/components/ui/badge'
@@ -45,6 +46,8 @@ export function CandidatesPage() {
   const [source, setSource] = useState('all')
   const [sort, setSort] = useState<SortKey>('applied')
   const [selected, setSelected] = useState<Set<string>>(new Set())
+  const [page, setPage] = useState(1)
+  const pageSize = 12
 
   const rows = useMemo(() => {
     let list = candidates.filter((c) => !c.archived)
@@ -60,6 +63,10 @@ export function CandidatesPage() {
       return a.appliedDaysAgo - b.appliedDaysAgo
     })
   }, [candidates, stage, source, search, sort])
+
+  useEffect(() => setPage(1), [stage, source, search, sort])
+
+  const paged = rows.slice((page - 1) * pageSize, page * pageSize)
 
   const allSelected = rows.length > 0 && rows.every((r) => selected.has(r.id))
   const toggleAll = () =>
@@ -214,7 +221,7 @@ export function CandidatesPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {rows.map((c) => (
+              {paged.map((c) => (
                 <TableRow
                   key={c.id}
                   className="cursor-pointer"
@@ -262,6 +269,12 @@ export function CandidatesPage() {
               ))}
             </TableBody>
           </Table>
+          <Pagination
+            page={page}
+            pageSize={pageSize}
+            total={rows.length}
+            onPageChange={setPage}
+          />
         </Card>
       )}
     </div>
