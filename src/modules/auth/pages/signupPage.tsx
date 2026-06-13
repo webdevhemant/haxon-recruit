@@ -1,24 +1,35 @@
-import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { Lock, Mail, User } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { ROUTES } from '@/lib/routes'
 import { useAuthStore } from '@/stores/useAuthStore'
 import { AuthFormShell } from '../components/authFormShell'
+import { AuthField } from '../components/authField'
 import { SocialButtons } from '../components/socialButtons'
+
+const schema = z.object({
+  name: z.string().min(2, 'Enter your full name'),
+  email: z.string().email('Enter a valid email'),
+  password: z.string().min(8, 'Must be at least 8 characters'),
+})
+
+type SignupValues = z.infer<typeof schema>
 
 export function SignupPage() {
   const navigate = useNavigate()
   const signup = useAuthStore((s) => s.signup)
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<SignupValues>({ resolver: zodResolver(schema) })
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    signup(name || 'New User', email)
+  const onSubmit = (values: SignupValues) => {
+    signup(values.name, values.email)
     navigate(ROUTES.dashboard)
   }
 
@@ -42,40 +53,34 @@ export function SignupPage() {
         <span className="h-px flex-1 bg-border" />
       </div>
 
-      <form onSubmit={onSubmit} className="flex flex-col gap-4">
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="name">Full name</Label>
-          <Input
-            id="name"
-            required
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Jordan Lee"
-          />
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="email">Work email</Label>
-          <Input
-            id="email"
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@company.com"
-          />
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="password">Password</Label>
-          <Input
-            id="password"
-            type="password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="At least 8 characters"
-          />
-        </div>
-        <Button type="submit" className="mt-1 w-full">
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+        <AuthField
+          id="name"
+          label="Full name"
+          icon={User}
+          placeholder="Jordan Lee"
+          error={errors.name?.message}
+          {...register('name')}
+        />
+        <AuthField
+          id="email"
+          label="Work email"
+          icon={Mail}
+          type="email"
+          placeholder="you@company.com"
+          error={errors.email?.message}
+          {...register('email')}
+        />
+        <AuthField
+          id="password"
+          label="Password"
+          icon={Lock}
+          type="password"
+          placeholder="At least 8 characters"
+          error={errors.password?.message}
+          {...register('password')}
+        />
+        <Button type="submit" className="mt-1 w-full" disabled={isSubmitting}>
           Create account
         </Button>
         <p className="text-center text-xs text-muted-foreground">

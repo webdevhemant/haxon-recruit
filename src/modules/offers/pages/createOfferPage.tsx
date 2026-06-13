@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
+import { WizardStep } from '@/components/common/wizardStep'
 import { formatCurrency, formatDate } from '@/lib/format'
 import { ROUTES } from '@/lib/routes'
 import { useDataStore } from '@/stores/useDataStore'
@@ -115,119 +116,124 @@ export function CreateOfferPage() {
       </div>
 
       <Card>
-        <CardContent className="p-6">
-          {step === 0 && (
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-1.5">
-                <Label>Candidate</Label>
-                <Select value={candidateId} onValueChange={setCandidateId}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a candidate" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {eligible.map((c) => (
-                      <SelectItem key={c.id} value={c.id}>
-                        {c.name} — {c.currentTitle}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <CardContent className="overflow-hidden p-6">
+          <WizardStep stepKey={step}>
+            {step === 0 && (
+              <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <Label htmlFor="base">Base salary ($)</Label>
-                  <Input
-                    id="base"
-                    type="number"
-                    value={base}
-                    onChange={(e) => setBase(e.target.value)}
-                  />
+                  <Label>Candidate</Label>
+                  <Select value={candidateId} onValueChange={setCandidateId}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a candidate" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {eligible.map((c) => (
+                        <SelectItem key={c.id} value={c.id}>
+                          {c.name} — {c.currentTitle}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                  <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="base">Base salary ($)</Label>
+                    <Input
+                      id="base"
+                      type="number"
+                      value={base}
+                      onChange={(e) => setBase(e.target.value)}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="bonus">Bonus (%)</Label>
+                    <Input
+                      id="bonus"
+                      type="number"
+                      value={bonus}
+                      onChange={(e) => setBonus(e.target.value)}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="equity">Equity (%)</Label>
+                    <Input
+                      id="equity"
+                      type="number"
+                      step="0.01"
+                      value={equity}
+                      onChange={(e) => setEquity(e.target.value)}
+                    />
+                  </div>
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <Label htmlFor="bonus">Bonus (%)</Label>
-                  <Input
-                    id="bonus"
-                    type="number"
-                    value={bonus}
-                    onChange={(e) => setBonus(e.target.value)}
-                  />
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <Label htmlFor="equity">Equity (%)</Label>
-                  <Input
-                    id="equity"
-                    type="number"
-                    step="0.01"
-                    value={equity}
-                    onChange={(e) => setEquity(e.target.value)}
+                  <Label>Start date</Label>
+                  <DatePicker
+                    value={startDate}
+                    onChange={setStartDate}
+                    disabled={(d) =>
+                      d < new Date(new Date().setHours(0, 0, 0, 0))
+                    }
                   />
                 </div>
               </div>
-              <div className="flex flex-col gap-1.5">
-                <Label>Start date</Label>
-                <DatePicker
-                  value={startDate}
-                  onChange={setStartDate}
-                  disabled={(d) =>
-                    d < new Date(new Date().setHours(0, 0, 0, 0))
-                  }
-                />
-              </div>
-            </div>
-          )}
+            )}
 
-          {step === 1 && (
-            <div className="flex flex-col gap-3">
-              <p className="text-sm text-muted-foreground">
-                This offer requires the following approvals before it can be
-                sent.
-              </p>
-              {APPROVERS.map((a) => (
-                <div
-                  key={a.name}
-                  className="flex items-center justify-between rounded-lg border border-border p-3"
-                >
-                  <span className="text-sm font-medium">{a.name}</span>
-                  {a.status === 'approved' ? (
-                    <span className="flex items-center gap-1.5 text-xs text-success">
-                      <CheckCircle2 className="size-4" /> Approved
-                    </span>
-                  ) : (
-                    <span className="flex items-center gap-1.5 text-xs text-warning">
-                      <Clock className="size-4" /> Pending
-                    </span>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-
-          {step === 2 && (
-            <div className="rounded-xl border border-border p-6">
-              <p className="text-xs uppercase tracking-wider text-muted-foreground">
-                Offer letter
-              </p>
-              <h2 className="mt-2 font-display text-lg font-bold">
-                {candidate?.name}
-              </h2>
-              <p className="text-sm text-muted-foreground">
-                {job?.title} · {job?.department}
-              </p>
-              <div className="mt-5 flex flex-col gap-2 text-sm">
-                <Row label="Base salary" value={formatCurrency(Number(base))} />
-                <Row label="Annual bonus" value={`${bonus}%`} />
-                <Row label="Equity" value={`${equity}%`} />
-                <Row
-                  label="Start date"
-                  value={
-                    startDate
-                      ? formatDate(startDate.toISOString())
-                      : 'To be confirmed'
-                  }
-                />
+            {step === 1 && (
+              <div className="flex flex-col gap-3">
+                <p className="text-sm text-muted-foreground">
+                  This offer requires the following approvals before it can be
+                  sent.
+                </p>
+                {APPROVERS.map((a) => (
+                  <div
+                    key={a.name}
+                    className="flex items-center justify-between rounded-lg border border-border p-3"
+                  >
+                    <span className="text-sm font-medium">{a.name}</span>
+                    {a.status === 'approved' ? (
+                      <span className="flex items-center gap-1.5 text-xs text-success">
+                        <CheckCircle2 className="size-4" /> Approved
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-1.5 text-xs text-warning">
+                        <Clock className="size-4" /> Pending
+                      </span>
+                    )}
+                  </div>
+                ))}
               </div>
-            </div>
-          )}
+            )}
+
+            {step === 2 && (
+              <div className="rounded-xl border border-border p-6">
+                <p className="text-xs uppercase tracking-wider text-muted-foreground">
+                  Offer letter
+                </p>
+                <h2 className="mt-2 font-display text-lg font-bold">
+                  {candidate?.name}
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  {job?.title} · {job?.department}
+                </p>
+                <div className="mt-5 flex flex-col gap-2 text-sm">
+                  <Row
+                    label="Base salary"
+                    value={formatCurrency(Number(base))}
+                  />
+                  <Row label="Annual bonus" value={`${bonus}%`} />
+                  <Row label="Equity" value={`${equity}%`} />
+                  <Row
+                    label="Start date"
+                    value={
+                      startDate
+                        ? formatDate(startDate.toISOString())
+                        : 'To be confirmed'
+                    }
+                  />
+                </div>
+              </div>
+            )}
+          </WizardStep>
         </CardContent>
       </Card>
 

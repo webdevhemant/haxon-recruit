@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent } from '@/components/ui/card'
 import { EmptyState } from '@/components/common/emptyState'
 import { cn } from '@/lib/utils'
+import { WizardStep } from '@/components/common/wizardStep'
 import { ROUTES } from '@/lib/routes'
 import type { Candidate } from '@/lib/types'
 import { useDataStore } from '@/stores/useDataStore'
@@ -144,91 +145,93 @@ export function ApplicationPage() {
       </div>
 
       <Card>
-        <CardContent className="p-6">
-          {step === 0 && (
-            <div className="flex flex-col gap-4">
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <Field label="First name">
+        <CardContent className="overflow-hidden p-6">
+          <WizardStep stepKey={step}>
+            {step === 0 && (
+              <div className="flex flex-col gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <Field label="First name">
+                    <Input
+                      value={first}
+                      onChange={(e) => setFirst(e.target.value)}
+                    />
+                  </Field>
+                  <Field label="Last name">
+                    <Input
+                      value={last}
+                      onChange={(e) => setLast(e.target.value)}
+                    />
+                  </Field>
+                </div>
+                <Field label="Email">
                   <Input
-                    value={first}
-                    onChange={(e) => setFirst(e.target.value)}
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@email.com"
                   />
                 </Field>
-                <Field label="Last name">
+                <Field label="Location">
                   <Input
-                    value={last}
-                    onChange={(e) => setLast(e.target.value)}
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    placeholder="City, Country or Remote"
                   />
                 </Field>
               </div>
-              <Field label="Email">
-                <Input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@email.com"
-                />
-              </Field>
-              <Field label="Location">
-                <Input
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  placeholder="City, Country or Remote"
-                />
-              </Field>
-            </div>
-          )}
+            )}
 
-          {step === 1 && (
-            <div className="flex flex-col gap-4">
-              <Field label="Current title">
-                <Input
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder="e.g. Senior Engineer at Acme"
-                />
-              </Field>
-              <Field label="Why do you want to join?">
-                <Textarea
-                  rows={5}
-                  value={why}
-                  onChange={(e) => setWhy(e.target.value)}
-                  placeholder="Tell us what excites you about this role…"
-                />
-              </Field>
-            </div>
-          )}
-
-          {step === 2 && (
-            <div className="flex flex-col gap-4">
-              <Field label="Resume / CV">
-                <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-border py-10 text-center transition-colors hover:border-primary/50">
-                  <Upload className="size-5 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">
-                    {fileName || 'Click to upload (PDF, DOCX)'}
-                  </span>
-                  <input
-                    type="file"
-                    className="hidden"
-                    onChange={(e) =>
-                      setFileName(e.target.files?.[0]?.name ?? '')
-                    }
+            {step === 1 && (
+              <div className="flex flex-col gap-4">
+                <Field label="Current title">
+                  <Input
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="e.g. Senior Engineer at Acme"
                   />
-                </label>
-              </Field>
-            </div>
-          )}
+                </Field>
+                <Field label="Why do you want to join?">
+                  <Textarea
+                    rows={5}
+                    value={why}
+                    onChange={(e) => setWhy(e.target.value)}
+                    placeholder="Tell us what excites you about this role…"
+                  />
+                </Field>
+              </div>
+            )}
 
-          {step === 3 && (
-            <div className="flex flex-col gap-3 text-sm">
-              <Review label="Name" value={`${first} ${last}`.trim() || '—'} />
-              <Review label="Email" value={email || '—'} />
-              <Review label="Location" value={location || '—'} />
-              <Review label="Current title" value={title || '—'} />
-              <Review label="Resume" value={fileName || 'Not attached'} />
-              <Review label="Applying for" value={job.title} />
-            </div>
-          )}
+            {step === 2 && (
+              <div className="flex flex-col gap-4">
+                <Field label="Resume / CV">
+                  <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-border py-10 text-center transition-colors hover:border-primary/50">
+                    <Upload className="size-5 text-muted-foreground" />
+                    <span className="text-sm text-muted-foreground">
+                      {fileName || 'Click to upload (PDF, DOCX)'}
+                    </span>
+                    <input
+                      type="file"
+                      className="hidden"
+                      onChange={(e) =>
+                        setFileName(e.target.files?.[0]?.name ?? '')
+                      }
+                    />
+                  </label>
+                </Field>
+              </div>
+            )}
+
+            {step === 3 && (
+              <div className="flex flex-col gap-3 text-sm">
+                <Review label="Name" value={`${first} ${last}`.trim() || '—'} />
+                <Review label="Email" value={email || '—'} />
+                <Review label="Location" value={location || '—'} />
+                <Review label="Current title" value={title || '—'} />
+                <Review label="Resume" value={fileName || 'Not attached'} />
+                <Review label="Applying for" value={job.title} />
+              </div>
+            )}
+          </WizardStep>
         </CardContent>
       </Card>
 

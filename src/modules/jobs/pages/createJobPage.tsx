@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
+import { WizardStep } from '@/components/common/wizardStep'
 import { formatSalaryRange } from '@/lib/format'
 import { DEFAULT_PIPELINE, DEPARTMENTS } from '@/lib/data/constants'
 import { RECRUITERS } from '@/lib/data/team'
@@ -145,190 +146,195 @@ export function CreateJobPage() {
       </div>
 
       <Card>
-        <CardContent className="p-6">
-          {step === 0 && (
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-1.5">
-                <Label htmlFor="title">Job title</Label>
-                <Input
-                  id="title"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder="e.g. Senior Frontend Engineer"
-                />
-              </div>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                <Field label="Department">
-                  <Select
-                    value={department}
-                    onValueChange={(v) => setDepartment(v as Department)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {DEPARTMENTS.map((d) => (
-                        <SelectItem key={d} value={d}>
-                          {d}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </Field>
-                <Field label="Office">
-                  <Select
-                    value={office}
-                    onValueChange={(v) => setOffice(v as Office)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {OFFICES.map((o) => (
-                        <SelectItem key={o} value={o}>
-                          {o}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </Field>
-                <Field label="Type">
-                  <Select
-                    value={type}
-                    onValueChange={(v) => setType(v as EmploymentType)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {TYPES.map((t) => (
-                        <SelectItem key={t} value={t}>
-                          {t}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </Field>
-              </div>
-            </div>
-          )}
-
-          {step === 1 && (
-            <div className="flex flex-col gap-4">
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                <Field label="Headcount">
+        <CardContent className="overflow-hidden p-6">
+          <WizardStep stepKey={step}>
+            {step === 0 && (
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-1.5">
+                  <Label htmlFor="title">Job title</Label>
                   <Input
-                    type="number"
-                    min={1}
-                    value={headcount}
-                    onChange={(e) => setHeadcount(e.target.value)}
+                    id="title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="e.g. Senior Frontend Engineer"
                   />
-                </Field>
-                <Field label="Salary min ($)">
-                  <Input
-                    type="number"
-                    value={salaryMin}
-                    onChange={(e) => setSalaryMin(e.target.value)}
-                  />
-                </Field>
-                <Field label="Salary max ($)">
-                  <Input
-                    type="number"
-                    value={salaryMax}
-                    onChange={(e) => setSalaryMax(e.target.value)}
-                  />
-                </Field>
-              </div>
-              <div className="flex items-center justify-between rounded-lg border border-border p-3">
-                <div>
-                  <p className="text-sm font-medium">Remote friendly</p>
-                  <p className="text-xs text-muted-foreground">
-                    Allow candidates to work remotely.
-                  </p>
                 </div>
-                <Switch checked={remote} onCheckedChange={setRemote} />
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                  <Field label="Department">
+                    <Select
+                      value={department}
+                      onValueChange={(v) => setDepartment(v as Department)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {DEPARTMENTS.map((d) => (
+                          <SelectItem key={d} value={d}>
+                            {d}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </Field>
+                  <Field label="Office">
+                    <Select
+                      value={office}
+                      onValueChange={(v) => setOffice(v as Office)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {OFFICES.map((o) => (
+                          <SelectItem key={o} value={o}>
+                            {o}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </Field>
+                  <Field label="Type">
+                    <Select
+                      value={type}
+                      onValueChange={(v) => setType(v as EmploymentType)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {TYPES.map((t) => (
+                          <SelectItem key={t} value={t}>
+                            {t}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </Field>
+                </div>
               </div>
-              <Field label="Job description">
-                <Textarea
-                  rows={5}
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Describe the role, responsibilities and requirements…"
-                />
-              </Field>
-            </div>
-          )}
+            )}
 
-          {step === 2 && (
-            <div>
-              <p className="mb-3 text-sm text-muted-foreground">
-                Candidates will move through these stages. Drag to reorder
-                (using the default pipeline).
-              </p>
-              <div className="flex flex-col gap-2">
-                {DEFAULT_PIPELINE.map((s, i) => (
-                  <div
-                    key={s.id}
-                    className="flex items-center gap-3 rounded-lg border border-border p-3"
-                  >
-                    <GripVertical className="size-4 text-muted-foreground" />
-                    <span className="flex size-6 items-center justify-center rounded-full bg-secondary text-xs font-medium">
-                      {i + 1}
-                    </span>
-                    <span className="text-sm font-medium">{s.name}</span>
-                    <span className="ml-auto text-xs capitalize text-muted-foreground">
-                      {s.type}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {step === 3 && (
-            <div>
-              <p className="mb-3 text-sm text-muted-foreground">
-                Choose the attributes interviewers will score.
-              </p>
-              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                {ATTRIBUTES.map((a) => (
-                  <label
-                    key={a}
-                    className="flex cursor-pointer items-center gap-3 rounded-lg border border-border p-3"
-                  >
-                    <Checkbox
-                      checked={attributes.includes(a)}
-                      onCheckedChange={() => toggleAttr(a)}
+            {step === 1 && (
+              <div className="flex flex-col gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                  <Field label="Headcount">
+                    <Input
+                      type="number"
+                      min={1}
+                      value={headcount}
+                      onChange={(e) => setHeadcount(e.target.value)}
                     />
-                    <span className="text-sm">{a}</span>
-                  </label>
-                ))}
+                  </Field>
+                  <Field label="Salary min ($)">
+                    <Input
+                      type="number"
+                      value={salaryMin}
+                      onChange={(e) => setSalaryMin(e.target.value)}
+                    />
+                  </Field>
+                  <Field label="Salary max ($)">
+                    <Input
+                      type="number"
+                      value={salaryMax}
+                      onChange={(e) => setSalaryMax(e.target.value)}
+                    />
+                  </Field>
+                </div>
+                <div className="flex items-center justify-between rounded-lg border border-border p-3">
+                  <div>
+                    <p className="text-sm font-medium">Remote friendly</p>
+                    <p className="text-xs text-muted-foreground">
+                      Allow candidates to work remotely.
+                    </p>
+                  </div>
+                  <Switch checked={remote} onCheckedChange={setRemote} />
+                </div>
+                <Field label="Job description">
+                  <Textarea
+                    rows={5}
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="Describe the role, responsibilities and requirements…"
+                  />
+                </Field>
               </div>
-            </div>
-          )}
+            )}
 
-          {step === 4 && (
-            <div className="flex flex-col gap-3 text-sm">
-              <Review label="Title" value={title || '—'} />
-              <Review
-                label="Team"
-                value={`${department} · ${office}${remote ? ' · Remote' : ''} · ${type}`}
-              />
-              <Review label="Headcount" value={headcount} />
-              <Review
-                label="Salary"
-                value={formatSalaryRange(Number(salaryMin), Number(salaryMax))}
-              />
-              <Review
-                label="Pipeline"
-                value={`${DEFAULT_PIPELINE.length} stages`}
-              />
-              <Review
-                label="Scorecard"
-                value={`${attributes.length} attributes`}
-              />
-            </div>
-          )}
+            {step === 2 && (
+              <div>
+                <p className="mb-3 text-sm text-muted-foreground">
+                  Candidates will move through these stages. Drag to reorder
+                  (using the default pipeline).
+                </p>
+                <div className="flex flex-col gap-2">
+                  {DEFAULT_PIPELINE.map((s, i) => (
+                    <div
+                      key={s.id}
+                      className="flex items-center gap-3 rounded-lg border border-border p-3"
+                    >
+                      <GripVertical className="size-4 text-muted-foreground" />
+                      <span className="flex size-6 items-center justify-center rounded-full bg-secondary text-xs font-medium">
+                        {i + 1}
+                      </span>
+                      <span className="text-sm font-medium">{s.name}</span>
+                      <span className="ml-auto text-xs capitalize text-muted-foreground">
+                        {s.type}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {step === 3 && (
+              <div>
+                <p className="mb-3 text-sm text-muted-foreground">
+                  Choose the attributes interviewers will score.
+                </p>
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                  {ATTRIBUTES.map((a) => (
+                    <label
+                      key={a}
+                      className="flex cursor-pointer items-center gap-3 rounded-lg border border-border p-3"
+                    >
+                      <Checkbox
+                        checked={attributes.includes(a)}
+                        onCheckedChange={() => toggleAttr(a)}
+                      />
+                      <span className="text-sm">{a}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {step === 4 && (
+              <div className="flex flex-col gap-3 text-sm">
+                <Review label="Title" value={title || '—'} />
+                <Review
+                  label="Team"
+                  value={`${department} · ${office}${remote ? ' · Remote' : ''} · ${type}`}
+                />
+                <Review label="Headcount" value={headcount} />
+                <Review
+                  label="Salary"
+                  value={formatSalaryRange(
+                    Number(salaryMin),
+                    Number(salaryMax),
+                  )}
+                />
+                <Review
+                  label="Pipeline"
+                  value={`${DEFAULT_PIPELINE.length} stages`}
+                />
+                <Review
+                  label="Scorecard"
+                  value={`${attributes.length} attributes`}
+                />
+              </div>
+            )}
+          </WizardStep>
         </CardContent>
       </Card>
 

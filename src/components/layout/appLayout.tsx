@@ -4,6 +4,7 @@ import { motion } from 'motion/react'
 import type { Permission } from '@/lib/rbac'
 import { ROUTES } from '@/lib/routes'
 import { usePermissions } from '@/hooks/usePermissions'
+import { useAuthStore } from '@/stores/useAuthStore'
 import { Sidebar } from './sidebar'
 import { Topbar } from './topbar'
 
@@ -34,6 +35,12 @@ const FALLBACK_ORDER: { permission: Permission; route: string }[] = [
 export function AppLayout() {
   const { pathname } = useLocation()
   const { role, can } = usePermissions()
+  const user = useAuthStore((s) => s.user)
+
+  // Signed-out users go to login.
+  if (!user) {
+    return <Navigate to={ROUTES.login} replace />
+  }
 
   // Applicants never see the internal app.
   if (role === 'applicant') {
