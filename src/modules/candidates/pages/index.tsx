@@ -1,13 +1,6 @@
 import { PagePlaceholder } from '@/components/common/pagePlaceholder'
 
-export function CandidatesPage() {
-  return (
-    <PagePlaceholder
-      title="All Candidates"
-      description="Global candidate table with search, filters, sorting and bulk actions."
-    />
-  )
-}
+export { CandidatesPage } from './candidatesPage'
 
 export function CandidateProfilePage() {
   return (

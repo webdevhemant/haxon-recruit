@@ -7,6 +7,10 @@ import type {
   TeamMember,
 } from '@/lib/types'
 import { TEAM } from '@/lib/data/team'
+import { DEFAULT_PIPELINE } from '@/lib/data/constants'
+
+export const stageName = (stageId: string): string =>
+  DEFAULT_PIPELINE.find((s) => s.id === stageId)?.name ?? stageId
 
 export const teamMember = (id: string): TeamMember | undefined =>
   TEAM.find((m) => m.id === id)
