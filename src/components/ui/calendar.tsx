@@ -119,10 +119,10 @@ export function Calendar({
         showOutsideDays={showOutsideDays}
         hideNavigation
         classNames={{
-          months: 'flex flex-col',
-          month: 'flex flex-col gap-3',
+          months: 'flex flex-col items-center',
+          month: 'flex w-full flex-col items-center gap-3',
           month_caption: 'hidden',
-          month_grid: 'w-full border-collapse',
+          month_grid: 'mx-auto border-collapse',
           weekdays: 'flex',
           weekday: 'w-9 text-[0.8rem] font-normal text-muted-foreground',
           week: 'mt-1.5 flex w-full',
