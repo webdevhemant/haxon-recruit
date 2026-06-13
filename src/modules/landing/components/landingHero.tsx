@@ -15,7 +15,7 @@ export function LandingHero() {
   return (
     <section
       id="top"
-      className="relative mx-auto grid max-w-6xl grid-cols-1 items-center gap-14 px-6 pb-16 pt-28 lg:grid-cols-2 lg:gap-20 lg:pb-20 lg:pt-32"
+      className="relative mx-auto grid max-w-6xl grid-cols-1 items-center gap-14 px-6 pb-16 pt-28 lg:grid-cols-[1.05fr_0.95fr] lg:gap-24 lg:pb-20 lg:pt-32"
     >
       <div>
         <div

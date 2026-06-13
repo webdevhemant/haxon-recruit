@@ -60,13 +60,6 @@ export function LandingFooter() {
           </div>
         ))}
       </div>
-
-      <div className="border-white/8 border-t">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 py-6 text-xs text-white/30 sm:flex-row">
-          <span>Haxon Recruit — a product demo.</span>
-          <span>9 modules · 24 pages · 180+ features · 0 backend deps</span>
-        </div>
-      </div>
     </footer>
   )
 }

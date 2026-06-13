@@ -50,9 +50,9 @@ export function AppLayout() {
   return (
     <div className="min-h-screen bg-background">
       <Sidebar />
-      <div className="flex min-h-screen flex-col lg:pl-64">
+      <div className="flex min-h-screen min-w-0 flex-col lg:pl-64">
         <Topbar />
-        <main className="flex-1 px-4 py-6 lg:px-8 lg:py-8">
+        <main className="min-w-0 flex-1 overflow-x-hidden px-4 py-6 lg:px-8 lg:py-8">
           <motion.div
             key={pathname}
             initial={{ opacity: 0, y: 12 }}

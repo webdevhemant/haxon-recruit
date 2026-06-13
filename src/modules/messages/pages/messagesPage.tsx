@@ -1,9 +1,11 @@
 import { useMemo, useRef, useState } from 'react'
-import { Send } from 'lucide-react'
+import { ArrowLeft, Paperclip, Send } from 'lucide-react'
+import { toast } from 'sonner'
 
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { SearchInput } from '@/components/common/searchInput'
 import { UserAvatar } from '@/components/common/userAvatar'
 import { cn } from '@/lib/utils'
 
@@ -20,6 +22,7 @@ interface Conversation {
   seed: string
   initials: string
   subtitle: string
+  unread: number
   messages: Message[]
 }
 
@@ -30,6 +33,7 @@ const SEED_CONVERSATIONS: Conversation[] = [
     seed: 'c1',
     initials: 'NC',
     subtitle: 'Senior Frontend Engineer · Interview',
+    unread: 2,
     messages: [
       {
         id: 'm1',
@@ -57,6 +61,7 @@ const SEED_CONVERSATIONS: Conversation[] = [
     seed: 'u-recruiter',
     initials: 'PN',
     subtitle: 'Recruiter · Teammate',
+    unread: 0,
     messages: [
       {
         id: 'm1',
@@ -78,6 +83,7 @@ const SEED_CONVERSATIONS: Conversation[] = [
     seed: 'c92',
     initials: 'ER',
     subtitle: 'Head of Sales · Offer',
+    unread: 1,
     messages: [
       {
         id: 'm1',
@@ -99,12 +105,26 @@ export function MessagesPage() {
   const [conversations, setConversations] = useState(SEED_CONVERSATIONS)
   const [activeId, setActiveId] = useState(SEED_CONVERSATIONS[0].id)
   const [draft, setDraft] = useState('')
+  const [search, setSearch] = useState('')
+  const [mobileThreadOpen, setMobileThreadOpen] = useState(false)
   const endRef = useRef<HTMLDivElement>(null)
 
   const active = useMemo(
     () => conversations.find((c) => c.id === activeId)!,
     [conversations, activeId],
   )
+
+  const filtered = conversations.filter((c) =>
+    c.name.toLowerCase().includes(search.toLowerCase()),
+  )
+
+  const openConversation = (id: string) => {
+    setActiveId(id)
+    setMobileThreadOpen(true)
+    setConversations((cs) =>
+      cs.map((c) => (c.id === id ? { ...c, unread: 0 } : c)),
+    )
+  }
 
   const send = () => {
     if (!draft.trim()) return
@@ -133,17 +153,26 @@ export function MessagesPage() {
 
       <Card className="grid h-[calc(100vh-12rem)] grid-cols-1 overflow-hidden md:grid-cols-[300px_1fr]">
         {/* conversation list */}
-        <div className="hidden flex-col border-r border-border md:flex">
-          <div className="border-b border-border px-4 py-3 text-sm font-semibold">
-            Conversations
+        <div
+          className={cn(
+            'min-w-0 flex-col border-r border-border md:flex',
+            mobileThreadOpen ? 'hidden md:flex' : 'flex',
+          )}
+        >
+          <div className="border-b border-border p-3">
+            <SearchInput
+              value={search}
+              onChange={setSearch}
+              placeholder="Search chats…"
+            />
           </div>
           <div className="flex-1 overflow-y-auto">
-            {conversations.map((c) => {
+            {filtered.map((c) => {
               const last = c.messages[c.messages.length - 1]
               return (
                 <button
                   key={c.id}
-                  onClick={() => setActiveId(c.id)}
+                  onClick={() => openConversation(c.id)}
                   className={cn(
                     'flex w-full items-center gap-3 border-b border-border px-4 py-3 text-left transition-colors hover:bg-secondary',
                     c.id === activeId && 'bg-secondary',
@@ -160,15 +189,39 @@ export function MessagesPage() {
                       {last.text}
                     </p>
                   </div>
+                  {c.unread > 0 && (
+                    <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-primary text-[11px] font-bold text-primary-foreground">
+                      {c.unread}
+                    </span>
+                  )}
                 </button>
               )
             })}
+            {filtered.length === 0 && (
+              <p className="px-4 py-6 text-center text-sm text-muted-foreground">
+                No chats found.
+              </p>
+            )}
           </div>
         </div>
 
         {/* thread */}
-        <div className="flex flex-col">
+        <div
+          className={cn(
+            'min-w-0 flex-col',
+            mobileThreadOpen ? 'flex' : 'hidden md:flex',
+          )}
+        >
           <div className="flex items-center gap-3 border-b border-border px-4 py-3">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              onClick={() => setMobileThreadOpen(false)}
+              aria-label="Back"
+            >
+              <ArrowLeft className="size-4" />
+            </Button>
             <UserAvatar
               seed={active.seed}
               initials={active.initials}
@@ -191,7 +244,7 @@ export function MessagesPage() {
               >
                 <div
                   className={cn(
-                    'max-w-[75%] rounded-2xl px-3.5 py-2 text-sm',
+                    'max-w-[80%] rounded-2xl px-3.5 py-2 text-sm sm:max-w-[75%]',
                     m.fromMe
                       ? 'rounded-br-sm bg-primary text-primary-foreground'
                       : 'rounded-bl-sm bg-secondary',
@@ -221,6 +274,15 @@ export function MessagesPage() {
             }}
             className="flex items-center gap-2 border-t border-border p-3"
           >
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() => toast.success('Attachment added (demo)')}
+              aria-label="Attach file"
+            >
+              <Paperclip className="size-4" />
+            </Button>
             <Input
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
