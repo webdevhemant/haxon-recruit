@@ -15,6 +15,7 @@ interface DataState {
   archiveCandidate: (candidateId: string) => void
   rateCandidate: (candidateId: string, rating: number) => void
   addJob: (job: Job) => void
+  addCandidate: (candidate: Candidate) => void
   addScorecard: (scorecard: Scorecard) => void
   addInterview: (interview: Interview) => void
   addOffer: (offer: Offer) => void
@@ -57,6 +58,9 @@ export const useDataStore = create<DataState>()(
         })),
 
       addJob: (job) => set((s) => ({ jobs: [job, ...s.jobs] })),
+
+      addCandidate: (candidate) =>
+        set((s) => ({ candidates: [candidate, ...s.candidates] })),
 
       addScorecard: (scorecard) =>
         set((s) => ({ scorecards: [scorecard, ...s.scorecards] })),
