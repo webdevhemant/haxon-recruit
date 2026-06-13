@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ArrowLeft, ArrowRight, Check, CheckCircle2, Clock } from 'lucide-react'
+import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -48,6 +49,7 @@ export function CreateOfferPage() {
   const publish = () => {
     if (!candidate) return
     const id = `of${Date.now()}`
+    toast.success(`Offer sent to ${candidate.name}`)
     addOffer({
       id,
       candidateId: candidate.id,

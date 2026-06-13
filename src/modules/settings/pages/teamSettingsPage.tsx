@@ -1,11 +1,19 @@
 import { useState } from 'react'
 import { UserPlus } from 'lucide-react'
+import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { UserAvatar } from '@/components/common/userAvatar'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import {
   Table,
   TableBody,
@@ -15,6 +23,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { TEAM } from '@/lib/data/team'
+import { DEPARTMENTS } from '@/lib/data/constants'
 import { daysAgoLabel } from '@/lib/format'
 import { SettingsTabs } from '../components/settingsTabs'
 
@@ -27,6 +36,17 @@ const ROLE_VARIANT: Record<string, 'default' | 'secondary' | 'outline'> = {
 
 export function TeamSettingsPage() {
   const [invite, setInvite] = useState('')
+  const [department, setDepartment] = useState('all')
+
+  const members =
+    department === 'all'
+      ? TEAM
+      : TEAM.filter((m) => m.department === department)
+
+  const sendInvite = () => {
+    toast.success(`Invitation sent to ${invite}`)
+    setInvite('')
+  }
 
   return (
     <div>
@@ -39,13 +59,23 @@ export function TeamSettingsPage() {
           placeholder="teammate@nexaflow.io"
           className="sm:max-w-xs"
         />
-        <Button onClick={() => setInvite('')} disabled={!invite}>
+        <Button onClick={sendInvite} disabled={!invite}>
           <UserPlus className="size-4" />
           Send invite
         </Button>
-        <span className="text-sm text-muted-foreground sm:ml-auto">
-          {TEAM.length} members
-        </span>
+        <Select value={department} onValueChange={setDepartment}>
+          <SelectTrigger className="sm:ml-auto sm:w-48">
+            <SelectValue placeholder="Department" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All departments</SelectItem>
+            {DEPARTMENTS.map((d) => (
+              <SelectItem key={d} value={d}>
+                {d}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </Card>
 
       <Card>
@@ -59,7 +89,7 @@ export function TeamSettingsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {TEAM.map((m) => (
+            {members.map((m) => (
               <TableRow key={m.id}>
                 <TableCell>
                   <div className="flex items-center gap-2.5">

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Check, MoreHorizontal, Plus, Send, X } from 'lucide-react'
+import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -43,6 +44,20 @@ export function OffersPage() {
 
   const manage = can('offers.manage')
   const filtered = offers.filter((o) => status === 'all' || o.status === status)
+
+  const setStatusWithToast = (
+    id: string,
+    next: 'sent' | 'accepted' | 'declined',
+    name?: string,
+  ) => {
+    updateOfferStatus(id, next)
+    const msg = {
+      sent: `Offer sent to ${name}`,
+      accepted: `${name}'s offer marked accepted`,
+      declined: `${name}'s offer marked declined`,
+    }[next]
+    toast.success(msg)
+  }
 
   return (
     <div>
@@ -149,7 +164,13 @@ export function OffersPage() {
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem
                             disabled={!manage || offer.status !== 'pending'}
-                            onSelect={() => updateOfferStatus(offer.id, 'sent')}
+                            onSelect={() =>
+                              setStatusWithToast(
+                                offer.id,
+                                'sent',
+                                candidate?.name,
+                              )
+                            }
                           >
                             <Send className="size-4" />
                             Send offer
@@ -157,7 +178,11 @@ export function OffersPage() {
                           <DropdownMenuItem
                             disabled={!manage || !actionable}
                             onSelect={() =>
-                              updateOfferStatus(offer.id, 'accepted')
+                              setStatusWithToast(
+                                offer.id,
+                                'accepted',
+                                candidate?.name,
+                              )
                             }
                           >
                             <Check className="size-4" />
@@ -166,7 +191,11 @@ export function OffersPage() {
                           <DropdownMenuItem
                             disabled={!manage || !actionable}
                             onSelect={() =>
-                              updateOfferStatus(offer.id, 'declined')
+                              setStatusWithToast(
+                                offer.id,
+                                'declined',
+                                candidate?.name,
+                              )
                             }
                           >
                             <X className="size-4" />

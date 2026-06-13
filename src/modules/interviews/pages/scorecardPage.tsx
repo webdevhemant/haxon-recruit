@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
+import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -98,6 +99,7 @@ export function ScorecardPage() {
       comment: comment.trim() || 'No additional comments.',
       submittedDaysAgo: 0,
     })
+    toast.success('Scorecard submitted')
     navigate(ROUTES.candidateDetail(candidate.id))
   }
 

@@ -43,7 +43,7 @@ export function CareersHeader() {
           <span className="flex size-7 items-center justify-center rounded-md bg-primary text-sm text-primary-foreground">
             H
           </span>
-          haxon<span className="-ml-2 text-primary">.</span>careers
+          haxon<span className="-ml-2 text-primary">.</span>recruit
         </Link>
 
         <nav className="hidden items-center gap-7 md:flex">

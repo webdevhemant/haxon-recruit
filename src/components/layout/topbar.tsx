@@ -1,9 +1,8 @@
 import { useState } from 'react'
-import { Bell, Menu, Search } from 'lucide-react'
+import { Bell, Menu } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { UserAvatar } from '@/components/common/userAvatar'
 import {
   Sheet,
@@ -64,15 +63,6 @@ export function Topbar() {
           <SidebarNav onNavigate={() => setMobileOpen(false)} />
         </SheetContent>
       </Sheet>
-
-      <div className="relative hidden max-w-sm flex-1 sm:block">
-        <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          placeholder="Search candidates, jobs…"
-          className="pl-9"
-          aria-label="Search"
-        />
-      </div>
 
       <div className="ml-auto flex items-center gap-2">
         <Button variant="ghost" size="icon" aria-label="Notifications">

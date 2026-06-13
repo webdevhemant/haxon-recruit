@@ -59,9 +59,9 @@ export const DEMO_USERS: AuthUser[] = [
   },
   {
     id: 'u-applicant',
-    name: 'Jordan Blake',
-    email: 'jordan@example.com',
-    initials: 'JB',
+    name: 'Hemant Bendadi',
+    email: 'hemant.dev.upwork@gmail.com',
+    initials: 'HB',
     role: 'applicant',
   },
 ]
@@ -118,6 +118,6 @@ export const useAuthStore = create<AuthState>()(
         ),
       logout: () => set({ user: null }),
     }),
-    { name: 'haxon-recruit-auth', version: 2 },
+    { name: 'haxon-recruit-auth', version: 3 },
   ),
 )

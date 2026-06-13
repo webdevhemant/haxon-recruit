@@ -1,5 +1,6 @@
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Archive, ArrowLeft, Mail, MapPin } from 'lucide-react'
+import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -117,14 +118,22 @@ export function CandidateProfilePage() {
               value={candidate.rating}
               size={18}
               onChange={
-                canManage ? (r) => rateCandidate(candidate.id, r) : undefined
+                canManage
+                  ? (r) => {
+                      rateCandidate(candidate.id, r)
+                      toast.success(`Rated ${r}/5`)
+                    }
+                  : undefined
               }
             />
             {canManage ? (
               <div className="flex items-center gap-2">
                 <Select
                   value={candidate.stageId}
-                  onValueChange={(v) => moveCandidate(candidate.id, v)}
+                  onValueChange={(v) => {
+                    moveCandidate(candidate.id, v)
+                    toast.success('Candidate moved')
+                  }}
                 >
                   <SelectTrigger className="w-40">
                     <SelectValue />
@@ -143,6 +152,7 @@ export function CandidateProfilePage() {
                   aria-label="Archive"
                   onClick={() => {
                     archiveCandidate(candidate.id)
+                    toast.success(`${candidate.name} archived`)
                     navigate(ROUTES.candidates)
                   }}
                 >

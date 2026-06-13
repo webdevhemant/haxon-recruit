@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ArrowLeft, ArrowRight, Check, GripVertical } from 'lucide-react'
+import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -91,6 +92,9 @@ export function CreateJobPage() {
       applicantCount: 0,
     }
     addJob(job)
+    toast.success(
+      status === 'open' ? `Published “${job.title}”` : 'Saved as draft',
+    )
     navigate(ROUTES.jobDetail(id))
   }
 

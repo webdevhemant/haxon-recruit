@@ -20,6 +20,7 @@ export default defineConfig({
       'zustand/middleware',
       'motion/react',
       'recharts',
+      'sonner',
       'lucide-react',
       'class-variance-authority',
       'clsx',

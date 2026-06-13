@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft, ArrowRight, Check, PartyPopper, Upload } from 'lucide-react'
+import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -66,6 +67,7 @@ export function ApplicationPage() {
       archived: false,
     }
     addCandidate(candidate)
+    toast.success('Application submitted!')
     setDone(true)
   }
 

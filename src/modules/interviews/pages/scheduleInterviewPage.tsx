@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Video } from 'lucide-react'
+import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -69,6 +70,7 @@ export function ScheduleInterviewPage() {
       durationMins: 60,
       interviewerIds,
     })
+    toast.success(`Interview scheduled with ${candidate.name}`)
     navigate(ROUTES.interviews)
   }
 

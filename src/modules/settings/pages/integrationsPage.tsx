@@ -11,6 +11,8 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 
+import { toast } from 'sonner'
+
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -85,10 +87,16 @@ export function IntegrationsPage() {
     ),
   )
 
-  const toggle = (id: string) =>
+  const toggle = (id: string, name: string) =>
     setConnected((prev) => {
       const next = new Set(prev)
-      next.has(id) ? next.delete(id) : next.add(id)
+      if (next.has(id)) {
+        next.delete(id)
+        toast.success(`${name} disconnected`)
+      } else {
+        next.add(id)
+        toast.success(`${name} connected`)
+      }
       return next
     })
 
@@ -122,7 +130,7 @@ export function IntegrationsPage() {
                 className="mt-4"
                 variant={isConnected ? 'outline' : 'default'}
                 disabled={comingSoon}
-                onClick={() => toggle(it.id)}
+                onClick={() => toggle(it.id, it.name)}
               >
                 {comingSoon
                   ? 'Notify me'

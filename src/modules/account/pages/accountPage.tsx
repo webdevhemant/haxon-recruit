@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Check, LogOut } from 'lucide-react'
+import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -49,6 +50,7 @@ export function AccountPage() {
   const onSave = () => {
     updateProfile({ name, email })
     setSaved(true)
+    toast.success('Profile updated')
     setTimeout(() => setSaved(false), 1800)
   }
 
