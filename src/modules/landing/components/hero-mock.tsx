@@ -1,87 +1,132 @@
+import { Star } from 'lucide-react'
+
 const COLUMNS = [
   {
-    title: 'Applied',
-    count: 35,
+    title: 'Screening',
+    count: 28,
+    accent: '#7b6cff',
     cards: [
-      { name: 'Noah Carter', role: 'Frontend Engineer', tone: 'a' },
-      { name: 'Emma Bennett', role: 'Product Manager', tone: 'b' },
+      { name: 'Olivia Patel', role: 'Brand Designer', initials: 'OP' },
+      { name: 'Liam Nguyen', role: 'Staff Engineer', initials: 'LN' },
     ],
   },
   {
     title: 'Interview',
     count: 24,
+    accent: '#3bd6ff',
     cards: [
-      { name: 'Liam Nguyen', role: 'Staff Engineer', tone: 'c' },
-      { name: 'Olivia Patel', role: 'Brand Designer', tone: 'a' },
+      { name: 'Ethan Rivera', role: 'Head of Sales', initials: 'ER' },
+      { name: 'Amara Cohen', role: 'Product Manager', initials: 'AC' },
     ],
-  },
-  {
-    title: 'Offer',
-    count: 8,
-    cards: [{ name: 'Ethan Rivera', role: 'Head of Sales', tone: 'b' }],
   },
 ]
 
-const TONES: Record<string, string> = {
-  a: 'bg-[#7b6cff]',
-  b: 'bg-[#b7ff3b]',
-  c: 'bg-[#3bd6ff]',
-}
-
 export function HeroMock() {
   return (
-    <div className="lp-float relative rounded-2xl border border-white/10 bg-[#0d0d11]/90 p-4 shadow-[0_40px_120px_-20px_rgba(123,108,255,0.45)] backdrop-blur">
-      <div className="mb-4 flex items-center justify-between px-1">
-        <div className="flex items-center gap-1.5">
-          <span className="size-2.5 rounded-full bg-white/15" />
-          <span className="size-2.5 rounded-full bg-white/15" />
-          <span className="size-2.5 rounded-full bg-white/15" />
+    <div className="lp-float relative">
+      <div className="rounded-2xl border border-white/10 bg-[#0c0c11] shadow-[0_50px_120px_-30px_rgba(123,108,255,0.55)]">
+        {/* window bar */}
+        <div className="border-white/6 flex items-center justify-between border-b px-4 py-3">
+          <div className="flex items-center gap-1.5">
+            <span className="bg-white/12 size-2.5 rounded-full" />
+            <span className="bg-white/12 size-2.5 rounded-full" />
+            <span className="bg-white/12 size-2.5 rounded-full" />
+          </div>
+          <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/35">
+            Senior Frontend Engineer
+          </span>
+          <span className="rounded-md bg-[#b7ff3b]/15 px-2 py-0.5 text-[10px] font-semibold text-[#b7ff3b]">
+            Open
+          </span>
         </div>
-        <span className="font-mono text-[10px] uppercase tracking-widest text-white/30">
-          Senior Frontend Engineer · Pipeline
-        </span>
-      </div>
 
-      <div className="grid grid-cols-3 gap-3">
-        {COLUMNS.map((col) => (
-          <div key={col.title} className="rounded-lg bg-white/[0.02] p-2.5">
-            <div className="mb-2.5 flex items-center justify-between px-1">
-              <span className="text-[11px] font-semibold text-white/70">
-                {col.title}
-              </span>
-              <span className="rounded-full bg-white/5 px-1.5 text-[10px] text-white/40">
-                {col.count}
-              </span>
-            </div>
-            <div className="flex flex-col gap-2">
-              {col.cards.map((c) => (
-                <div
-                  key={c.name}
-                  className="rounded-md border border-white/5 bg-[#121218] p-2.5"
-                >
-                  <div className="flex items-center gap-2">
-                    <span
-                      className={`flex size-6 items-center justify-center rounded-full text-[9px] font-bold text-black ${TONES[c.tone]}`}
-                    >
-                      {c.name
-                        .split(' ')
-                        .map((p) => p[0])
-                        .join('')}
-                    </span>
-                    <div className="min-w-0">
-                      <p className="truncate text-[11px] font-medium text-white/90">
-                        {c.name}
-                      </p>
-                      <p className="truncate text-[10px] text-white/40">
-                        {c.role}
-                      </p>
+        {/* spotlight candidate */}
+        <div className="border-white/6 flex items-center gap-3 border-b px-4 py-3.5">
+          <span className="flex size-10 items-center justify-center rounded-full bg-gradient-to-br from-[#7b6cff] to-[#b7ff3b] text-xs font-bold text-black">
+            NC
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-semibold text-white/90">
+              Noah Carter
+            </p>
+            <p className="truncate text-xs text-white/45">
+              Senior Frontend · LinkedIn
+            </p>
+          </div>
+          <div className="flex items-center gap-0.5">
+            {[1, 2, 3, 4].map((i) => (
+              <Star
+                key={i}
+                className="size-3.5 fill-[#b7ff3b] text-[#b7ff3b]"
+              />
+            ))}
+            <Star className="size-3.5 text-white/20" />
+          </div>
+        </div>
+
+        {/* mini kanban */}
+        <div className="grid grid-cols-2 gap-3 p-4">
+          {COLUMNS.map((col) => (
+            <div key={col.title} className="rounded-xl bg-white/[0.02] p-3">
+              <div className="mb-3 flex items-center justify-between">
+                <span className="flex items-center gap-2 text-xs font-semibold text-white/70">
+                  <span
+                    className="size-2 rounded-full"
+                    style={{ background: col.accent }}
+                  />
+                  {col.title}
+                </span>
+                <span className="text-[10px] text-white/35">{col.count}</span>
+              </div>
+              <div className="flex flex-col gap-2">
+                {col.cards.map((c) => (
+                  <div
+                    key={c.name}
+                    className="border-white/6 rounded-lg border bg-[#131319] p-2.5"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="bg-white/8 flex size-7 items-center justify-center rounded-full text-[10px] font-semibold text-white/80">
+                        {c.initials}
+                      </span>
+                      <div className="min-w-0">
+                        <p className="truncate text-xs font-medium text-white/90">
+                          {c.name}
+                        </p>
+                        <p className="truncate text-[10px] text-white/40">
+                          {c.role}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+
+        {/* footer stat strip */}
+        <div className="divide-white/6 border-white/6 grid grid-cols-3 divide-x border-t">
+          {[
+            ['23d', 'Time to hire'],
+            ['82%', 'Offer accept'],
+            ['12.5%', 'Apply → hire'],
+          ].map(([v, l]) => (
+            <div key={l} className="px-3 py-3 text-center">
+              <p className="font-display text-base font-bold text-white">{v}</p>
+              <p className="text-[10px] uppercase tracking-wide text-white/35">
+                {l}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* floating accent chip */}
+      <div className="absolute -left-4 -top-4 hidden rounded-xl border border-white/10 bg-[#0c0c11] px-3 py-2 shadow-xl sm:block">
+        <p className="text-[10px] uppercase tracking-wide text-white/40">
+          New applicant
+        </p>
+        <p className="text-xs font-semibold text-white/90">+12 this week</p>
       </div>
     </div>
   )
