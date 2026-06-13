@@ -1,0 +1,191 @@
+import { createBrowserRouter } from 'react-router-dom'
+
+import { AppLayout } from '@/components/layout/app-layout'
+import { PublicLayout } from '@/components/layout/public-layout'
+import { NotFound } from '@/components/common/not-found'
+import { ROUTES } from '@/lib/routes'
+
+export const router = createBrowserRouter([
+  {
+    path: ROUTES.landing,
+    lazy: async () => {
+      const m = await import('@/modules/landing/pages/landing-page')
+      return { Component: m.LandingPage }
+    },
+  },
+  {
+    element: <PublicLayout />,
+    children: [
+      {
+        path: ROUTES.careers,
+        lazy: async () => {
+          const m = await import('@/modules/careers/pages')
+          return { Component: m.CareersPage }
+        },
+      },
+      {
+        path: ROUTES.careersJobs,
+        lazy: async () => {
+          const m = await import('@/modules/careers/pages')
+          return { Component: m.JobBoardPage }
+        },
+      },
+      {
+        path: ROUTES.careersJobDetail(),
+        lazy: async () => {
+          const m = await import('@/modules/careers/pages')
+          return { Component: m.PublicJobDetailPage }
+        },
+      },
+      {
+        path: ROUTES.careersApply(),
+        lazy: async () => {
+          const m = await import('@/modules/careers/pages')
+          return { Component: m.ApplicationPage }
+        },
+      },
+    ],
+  },
+  {
+    element: <AppLayout />,
+    children: [
+      {
+        path: ROUTES.dashboard,
+        lazy: async () => {
+          const m = await import('@/modules/dashboard/pages/dashboard-page')
+          return { Component: m.DashboardPage }
+        },
+      },
+      {
+        path: ROUTES.jobs,
+        lazy: async () => {
+          const m = await import('@/modules/jobs/pages')
+          return { Component: m.JobsPage }
+        },
+      },
+      {
+        path: ROUTES.jobNew,
+        lazy: async () => {
+          const m = await import('@/modules/jobs/pages')
+          return { Component: m.CreateJobPage }
+        },
+      },
+      {
+        path: ROUTES.jobDetail(),
+        lazy: async () => {
+          const m = await import('@/modules/jobs/pages')
+          return { Component: m.JobDetailPage }
+        },
+      },
+      {
+        path: ROUTES.candidates,
+        lazy: async () => {
+          const m = await import('@/modules/candidates/pages')
+          return { Component: m.CandidatesPage }
+        },
+      },
+      {
+        path: ROUTES.candidateDetail(),
+        lazy: async () => {
+          const m = await import('@/modules/candidates/pages')
+          return { Component: m.CandidateProfilePage }
+        },
+      },
+      {
+        path: ROUTES.interviews,
+        lazy: async () => {
+          const m = await import('@/modules/interviews/pages')
+          return { Component: m.InterviewsPage }
+        },
+      },
+      {
+        path: ROUTES.interviewSchedule,
+        lazy: async () => {
+          const m = await import('@/modules/interviews/pages')
+          return { Component: m.ScheduleInterviewPage }
+        },
+      },
+      {
+        path: ROUTES.interviewScorecard(),
+        lazy: async () => {
+          const m = await import('@/modules/interviews/pages')
+          return { Component: m.ScorecardPage }
+        },
+      },
+      {
+        path: ROUTES.offers,
+        lazy: async () => {
+          const m = await import('@/modules/offers/pages')
+          return { Component: m.OffersPage }
+        },
+      },
+      {
+        path: ROUTES.offerNew,
+        lazy: async () => {
+          const m = await import('@/modules/offers/pages')
+          return { Component: m.CreateOfferPage }
+        },
+      },
+      {
+        path: ROUTES.analytics,
+        lazy: async () => {
+          const m = await import('@/modules/analytics/pages')
+          return { Component: m.AnalyticsPage }
+        },
+      },
+      {
+        path: ROUTES.analyticsDei,
+        lazy: async () => {
+          const m = await import('@/modules/analytics/pages')
+          return { Component: m.DeiReportPage }
+        },
+      },
+      {
+        path: ROUTES.analyticsSources,
+        lazy: async () => {
+          const m = await import('@/modules/analytics/pages')
+          return { Component: m.SourceReportPage }
+        },
+      },
+      {
+        path: ROUTES.settingsTeam,
+        lazy: async () => {
+          const m = await import('@/modules/settings/pages')
+          return { Component: m.TeamSettingsPage }
+        },
+      },
+      {
+        path: ROUTES.settingsIntegrations,
+        lazy: async () => {
+          const m = await import('@/modules/settings/pages')
+          return { Component: m.IntegrationsPage }
+        },
+      },
+      {
+        path: ROUTES.settingsTemplates,
+        lazy: async () => {
+          const m = await import('@/modules/settings/pages')
+          return { Component: m.EmailTemplatesPage }
+        },
+      },
+      {
+        path: ROUTES.settingsPipeline,
+        lazy: async () => {
+          const m = await import('@/modules/settings/pages')
+          return { Component: m.PipelineConfigPage }
+        },
+      },
+      {
+        path: ROUTES.settingsCompany,
+        lazy: async () => {
+          const m = await import('@/modules/settings/pages')
+          return { Component: m.CompanyProfilePage }
+        },
+      },
+    ],
+  },
+  {
+    path: '*',
+    element: <NotFound />,
+  },
+])
