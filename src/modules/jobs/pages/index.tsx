@@ -1,13 +1,6 @@
 import { PagePlaceholder } from '@/components/common/pagePlaceholder'
 
-export function JobsPage() {
-  return (
-    <PagePlaceholder
-      title="All Jobs"
-      description="Table + kanban of every requisition with filters, search and bulk actions."
-    />
-  )
-}
+export { JobsPage } from './jobsPage'
 
 export function JobDetailPage() {
   return (
