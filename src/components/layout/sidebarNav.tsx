@@ -1,7 +1,7 @@
 import { NavLink, useLocation } from 'react-router-dom'
 
 import { cn } from '@/lib/utils'
-import { NAV_GROUPS } from './nav-config'
+import { NAV_GROUPS } from './navConfig'
 
 export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
   const { pathname } = useLocation()

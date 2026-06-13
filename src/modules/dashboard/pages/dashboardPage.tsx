@@ -1,4 +1,4 @@
-import { PagePlaceholder } from '@/components/common/page-placeholder'
+import { PagePlaceholder } from '@/components/common/pagePlaceholder'
 
 export function DashboardPage() {
   return (

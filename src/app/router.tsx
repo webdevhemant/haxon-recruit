@@ -1,15 +1,15 @@
 import { createBrowserRouter } from 'react-router-dom'
 
-import { AppLayout } from '@/components/layout/app-layout'
-import { PublicLayout } from '@/components/layout/public-layout'
-import { NotFound } from '@/components/common/not-found'
+import { AppLayout } from '@/components/layout/appLayout'
+import { PublicLayout } from '@/components/layout/publicLayout'
+import { NotFound } from '@/components/common/notFound'
 import { ROUTES } from '@/lib/routes'
 
 export const router = createBrowserRouter([
   {
     path: ROUTES.landing,
     lazy: async () => {
-      const m = await import('@/modules/landing/pages/landing-page')
+      const m = await import('@/modules/landing/pages/landingPage')
       return { Component: m.LandingPage }
     },
   },
@@ -52,7 +52,7 @@ export const router = createBrowserRouter([
       {
         path: ROUTES.dashboard,
         lazy: async () => {
-          const m = await import('@/modules/dashboard/pages/dashboard-page')
+          const m = await import('@/modules/dashboard/pages/dashboardPage')
           return { Component: m.DashboardPage }
         },
       },

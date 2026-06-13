@@ -1,5 +1,5 @@
 import { Brand } from './brand'
-import { SidebarNav } from './sidebar-nav'
+import { SidebarNav } from './sidebarNav'
 
 export function Sidebar() {
   return (

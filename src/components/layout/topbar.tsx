@@ -21,7 +21,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { ROUTES } from '@/lib/routes'
 import { Brand } from './brand'
-import { SidebarNav } from './sidebar-nav'
+import { SidebarNav } from './sidebarNav'
 
 export function Topbar() {
   const [mobileOpen, setMobileOpen] = useState(false)

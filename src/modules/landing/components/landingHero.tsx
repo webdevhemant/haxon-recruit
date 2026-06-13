@@ -2,7 +2,7 @@ import { ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 import { ROUTES } from '@/lib/routes'
-import { HeroMock } from './hero-mock'
+import { HeroMock } from './heroMock'
 
 const STATS = [
   { value: '9', label: 'Core modules' },
