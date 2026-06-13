@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Bell, Menu } from 'lucide-react'
+import { Menu } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
@@ -24,6 +24,7 @@ import { ROLE_LABEL } from '@/lib/rbac'
 import { DEMO_USERS, useAuthStore } from '@/stores/useAuthStore'
 import { Brand } from './brand'
 import { SidebarNav } from './sidebarNav'
+import { NotificationsMenu } from './notificationsMenu'
 
 export function Topbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -65,9 +66,7 @@ export function Topbar() {
       </Sheet>
 
       <div className="ml-auto flex items-center gap-2">
-        <Button variant="ghost" size="icon" aria-label="Notifications">
-          <Bell className="size-5" />
-        </Button>
+        <NotificationsMenu />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
