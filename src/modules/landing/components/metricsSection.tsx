@@ -1,3 +1,7 @@
+import { motion } from 'motion/react'
+
+import { Reveal } from './motionPrimitives'
+
 const FUNNEL = [
   { label: 'Applied', value: 100, count: '1,240' },
   { label: 'Screened', value: 62, count: '769' },
@@ -19,7 +23,7 @@ export function MetricsSection() {
       className="relative border-y border-white/5 bg-[#0a0a0d]"
     >
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-14 px-6 py-28 lg:grid-cols-2 lg:items-center">
-        <div>
+        <Reveal>
           <p className="mb-4 flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-[#b7ff3b]">
             <span className="h-px w-6 bg-[#b7ff3b]" />
             Analytics that decide
@@ -50,9 +54,12 @@ export function MetricsSection() {
               </div>
             ))}
           </div>
-        </div>
+        </Reveal>
 
-        <div className="rounded-2xl border border-white/10 bg-[#0d0d11] p-7">
+        <Reveal
+          delay={0.1}
+          className="rounded-2xl border border-white/10 bg-[#0d0d11] p-7"
+        >
           <div className="mb-6 flex items-center justify-between">
             <span className="text-sm font-semibold text-white/80">
               Pipeline conversion
@@ -62,22 +69,29 @@ export function MetricsSection() {
             </span>
           </div>
           <div className="flex flex-col gap-4">
-            {FUNNEL.map((f) => (
+            {FUNNEL.map((f, i) => (
               <div key={f.label}>
                 <div className="mb-1.5 flex items-center justify-between text-xs">
                   <span className="text-white/55">{f.label}</span>
                   <span className="font-mono text-white/40">{f.count}</span>
                 </div>
                 <div className="h-2.5 overflow-hidden rounded-full bg-white/5">
-                  <div
+                  <motion.div
                     className="h-full rounded-full bg-gradient-to-r from-[#7b6cff] to-[#b7ff3b]"
-                    style={{ width: `${f.value}%` }}
+                    initial={{ width: 0 }}
+                    whileInView={{ width: `${f.value}%` }}
+                    viewport={{ once: true, margin: '-60px' }}
+                    transition={{
+                      duration: 0.9,
+                      ease: [0.16, 1, 0.3, 1],
+                      delay: i * 0.1,
+                    }}
                   />
                 </div>
               </div>
             ))}
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   )

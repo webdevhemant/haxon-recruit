@@ -1,12 +1,19 @@
 import { ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { motion } from 'motion/react'
 
 import { ROUTES } from '@/lib/routes'
 
 export function CtaSection() {
   return (
     <section className="relative mx-auto max-w-6xl px-6 py-28">
-      <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-[#0d0d11] px-8 py-20 text-center">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 30 }}
+        whileInView={{ opacity: 1, scale: 1, y: 0 }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        className="relative overflow-hidden rounded-3xl border border-white/10 bg-[#0d0d11] px-8 py-20 text-center"
+      >
         <div
           className="lp-glow"
           style={{
@@ -47,7 +54,7 @@ export function CtaSection() {
             No backend. No setup. Explore the full product instantly.
           </p>
         </div>
-      </div>
+      </motion.div>
     </section>
   )
 }

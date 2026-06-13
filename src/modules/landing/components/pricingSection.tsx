@@ -4,11 +4,12 @@ import { Link } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import { ROUTES } from '@/lib/routes'
 import { PRICING } from '../data/pricing'
+import { FlipItem, Reveal, StaggerGroup } from './motionPrimitives'
 
 export function PricingSection() {
   return (
     <section id="pricing" className="relative mx-auto max-w-6xl px-6 py-28">
-      <div className="mb-14 max-w-2xl">
+      <Reveal className="mb-14 max-w-2xl">
         <p className="mb-4 flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-[#7b6cff]">
           <span className="h-px w-6 bg-[#7b6cff]" />
           Pricing
@@ -16,14 +17,14 @@ export function PricingSection() {
         <h2 className="font-display text-[clamp(2.25rem,4vw,3.25rem)] font-extrabold leading-[1.05] tracking-[-0.02em]">
           Simple plans that scale with you.
         </h2>
-      </div>
+      </Reveal>
 
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+      <StaggerGroup className="grid grid-cols-1 gap-5 md:grid-cols-3">
         {PRICING.map((tier) => (
-          <div
+          <FlipItem
             key={tier.name}
             className={cn(
-              'relative flex flex-col rounded-2xl border p-7',
+              'relative flex h-full flex-col rounded-2xl border p-7',
               tier.featured
                 ? 'from-[#7b6cff]/12 border-[#7b6cff]/50 bg-gradient-to-b to-transparent'
                 : 'border-white/8 bg-[#0a0a0d]',
@@ -63,9 +64,9 @@ export function PricingSection() {
             >
               {tier.cta}
             </Link>
-          </div>
+          </FlipItem>
         ))}
-      </div>
+      </StaggerGroup>
     </section>
   )
 }
