@@ -18,6 +18,7 @@ export type Permission =
   | 'offers.view'
   | 'offers.manage'
   | 'analytics.view'
+  | 'messages.view'
   | 'settings.view'
 
 export const ROLE_LABEL: Record<Role, string> = {
@@ -49,6 +50,7 @@ const ALL: Permission[] = [
   'offers.view',
   'offers.manage',
   'analytics.view',
+  'messages.view',
   'settings.view',
 ]
 
@@ -67,6 +69,7 @@ export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     'offers.view',
     'offers.manage',
     'analytics.view',
+    'messages.view',
   ],
   hiring_manager: [
     'dashboard.view',
@@ -78,12 +81,14 @@ export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     'scorecards.submit',
     'offers.view',
     'analytics.view',
+    'messages.view',
   ],
   interviewer: [
     'dashboard.view',
     'candidates.view',
     'interviews.view',
     'scorecards.submit',
+    'messages.view',
   ],
   applicant: [],
 }

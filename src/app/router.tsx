@@ -100,6 +100,13 @@ export const router = createBrowserRouter([
         },
       },
       {
+        path: ROUTES.messages,
+        lazy: async () => {
+          const m = await import('@/modules/messages/pages/messagesPage')
+          return { Component: m.MessagesPage }
+        },
+      },
+      {
         path: ROUTES.jobs,
         lazy: async () => {
           const m = await import('@/modules/jobs/pages')

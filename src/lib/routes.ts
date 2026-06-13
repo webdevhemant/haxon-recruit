@@ -9,6 +9,7 @@ export const ROUTES = {
   account: '/account',
 
   dashboard: '/dashboard',
+  messages: '/messages',
 
   jobs: '/jobs',
   jobNew: '/jobs/new',

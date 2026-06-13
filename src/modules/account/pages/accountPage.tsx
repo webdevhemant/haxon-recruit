@@ -31,6 +31,7 @@ const PERMISSION_LABEL: Record<Permission, string> = {
   'offers.view': 'View offers',
   'offers.manage': 'Manage offers',
   'analytics.view': 'View analytics',
+  'messages.view': 'Use messages',
   'settings.view': 'Manage settings',
 }
 

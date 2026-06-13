@@ -19,6 +19,7 @@ function requiredPermission(pathname: string): Permission | null {
   if (/^\/interviews\/.+\/scorecard$/.test(pathname)) return 'scorecards.submit'
   if (pathname.startsWith('/interviews')) return 'interviews.view'
   if (pathname.startsWith('/candidates')) return 'candidates.view'
+  if (pathname.startsWith('/messages')) return 'messages.view'
   if (pathname.startsWith('/dashboard')) return 'dashboard.view'
   return null
 }
