@@ -1,4 +1,4 @@
-import { Star } from 'lucide-react'
+import { Star, UserPlus } from 'lucide-react'
 
 const COLUMNS = [
   {
@@ -122,11 +122,16 @@ export function HeroMock() {
       </div>
 
       {/* floating accent chip */}
-      <div className="absolute -left-4 -top-4 hidden rounded-xl border border-white/10 bg-[#0c0c11] px-3 py-2 shadow-xl sm:block">
-        <p className="text-[10px] uppercase tracking-wide text-white/40">
-          New applicant
-        </p>
-        <p className="text-xs font-semibold text-white/90">+12 this week</p>
+      <div className="absolute -bottom-5 -right-3 hidden items-center gap-2.5 rounded-xl border border-white/10 bg-[#0c0c11] px-3.5 py-2.5 shadow-2xl md:flex">
+        <span className="flex size-8 items-center justify-center rounded-lg bg-[#b7ff3b]/15 text-[#b7ff3b]">
+          <UserPlus className="size-4" />
+        </span>
+        <div className="leading-tight">
+          <p className="text-[10px] uppercase tracking-wide text-white/40">
+            New applicants
+          </p>
+          <p className="text-xs font-semibold text-white/90">+12 this week</p>
+        </div>
       </div>
     </div>
   )
