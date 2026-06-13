@@ -29,7 +29,7 @@ export function AuthLayout() {
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
       {/* brand panel */}
-      <div className="relative hidden overflow-hidden bg-[#08080a] p-10 lg:flex lg:flex-col lg:justify-between">
+      <div className="relative hidden overflow-hidden bg-[#08080a] p-10 lg:flex lg:items-center lg:justify-center">
         <div
           className="pointer-events-none absolute -right-40 -top-40 size-[480px] rounded-full opacity-40 blur-[130px]"
           style={{ background: '#7b6cff' }}
@@ -45,9 +45,11 @@ export function AuthLayout() {
           }}
         />
 
-        <Logo light />
+        <div className="absolute left-10 top-10">
+          <Logo light />
+        </div>
 
-        <div className="relative">
+        <div className="relative w-full max-w-md">
           <h2 className="max-w-md font-display text-[2.5rem] font-extrabold leading-[1.05] tracking-tight text-white">
             The hiring OS your whole team will love.
           </h2>
@@ -93,7 +95,7 @@ export function AuthLayout() {
 
         <Link
           to={ROUTES.landing}
-          className="relative inline-flex items-center gap-1 text-xs text-white/40 transition-colors hover:text-white/70"
+          className="absolute bottom-10 left-10 inline-flex items-center gap-1 text-xs text-white/40 transition-colors hover:text-white/70"
         >
           Back to homepage
           <ArrowUpRight className="size-3.5" />
