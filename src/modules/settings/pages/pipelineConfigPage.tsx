@@ -15,6 +15,7 @@ import {
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { GripVertical, Plus, X } from 'lucide-react'
+import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -22,6 +23,7 @@ import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import { DEFAULT_PIPELINE, DISQUALIFY_REASONS } from '@/lib/data/constants'
 import type { PipelineStage } from '@/lib/types'
+import { TabFade } from '@/components/common/tabFade'
 import { SettingsTabs } from '../components/settingsTabs'
 
 const TYPE_VARIANT: Record<
@@ -83,6 +85,7 @@ function SortableStage({
 
 export function PipelineConfigPage() {
   const [stages, setStages] = useState<PipelineStage[]>(DEFAULT_PIPELINE)
+  const [reasons, setReasons] = useState<string[]>(DISQUALIFY_REASONS)
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
   )
@@ -97,66 +100,101 @@ export function PipelineConfigPage() {
     })
   }
 
+  const addStage = () => {
+    const id = `stage-${Date.now()}`
+    setStages((s) => [
+      ...s.slice(0, -1),
+      { id, name: 'New stage', type: 'interview' },
+      ...s.slice(-1),
+    ])
+    toast.success('Stage added')
+  }
+
+  const addReason = () => {
+    setReasons((r) => [...r, 'New reason'])
+    toast.success('Reason added')
+  }
+
+  const removeReason = (reason: string) => {
+    setReasons((r) => r.filter((x) => x !== reason))
+    toast.success('Reason removed')
+  }
+
   return (
     <div>
       <SettingsTabs />
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_320px]">
-        <Card>
-          <CardHeader className="flex-row items-center justify-between space-y-0">
-            <CardTitle className="text-base">Default pipeline stages</CardTitle>
-            <Button size="sm" variant="outline">
-              <Plus className="size-4" />
-              Add stage
-            </Button>
-          </CardHeader>
-          <CardContent>
-            <p className="mb-3 text-sm text-muted-foreground">
-              Drag the handle to reorder how candidates flow through your
-              pipeline.
-            </p>
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={onDragEnd}
-            >
-              <SortableContext
-                items={stages.map((s) => s.id)}
-                strategy={verticalListSortingStrategy}
+      <TabFade>
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_320px]">
+          <Card>
+            <CardHeader className="flex-row items-center justify-between space-y-0">
+              <CardTitle className="text-base">
+                Default pipeline stages
+              </CardTitle>
+              <Button size="sm" variant="outline" onClick={addStage}>
+                <Plus className="size-4" />
+                Add stage
+              </Button>
+            </CardHeader>
+            <CardContent>
+              <p className="mb-3 text-sm text-muted-foreground">
+                Drag the handle to reorder how candidates flow through your
+                pipeline.
+              </p>
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={onDragEnd}
               >
-                <div className="flex flex-col gap-2">
-                  {stages.map((stage, i) => (
-                    <SortableStage key={stage.id} stage={stage} index={i} />
-                  ))}
-                </div>
-              </SortableContext>
-            </DndContext>
-          </CardContent>
-        </Card>
+                <SortableContext
+                  items={stages.map((s) => s.id)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <div className="flex flex-col gap-2">
+                    {stages.map((stage, i) => (
+                      <SortableStage key={stage.id} stage={stage} index={i} />
+                    ))}
+                  </div>
+                </SortableContext>
+              </DndContext>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">
-              Disqualification reasons
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-2">
-            {DISQUALIFY_REASONS.map((r) => (
-              <div
-                key={r}
-                className="flex items-center justify-between rounded-lg border border-border px-3 py-2 text-sm"
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">
+                Disqualification reasons
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-2">
+              {reasons.map((r) => (
+                <div
+                  key={r}
+                  className="flex items-center justify-between rounded-lg border border-border px-3 py-2 text-sm"
+                >
+                  {r}
+                  <button
+                    onClick={() => removeReason(r)}
+                    aria-label={`Remove ${r}`}
+                    className="text-muted-foreground hover:text-destructive"
+                  >
+                    <X className="size-3.5" />
+                  </button>
+                </div>
+              ))}
+              <Button
+                size="sm"
+                variant="ghost"
+                className="mt-1 justify-start"
+                onClick={addReason}
               >
-                {r}
-                <X className="size-3.5 cursor-pointer text-muted-foreground hover:text-foreground" />
-              </div>
-            ))}
-            <Button size="sm" variant="ghost" className="mt-1 justify-start">
-              <Plus className="size-4" />
-              Add reason
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
+                <Plus className="size-4" />
+                Add reason
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </TabFade>
     </div>
   )
 }

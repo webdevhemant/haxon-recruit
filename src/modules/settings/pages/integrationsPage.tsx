@@ -16,6 +16,7 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { TabFade } from '@/components/common/tabFade'
 import { SettingsTabs } from '../components/settingsTabs'
 
 type State = 'connected' | 'available' | 'coming-soon'
@@ -104,44 +105,46 @@ export function IntegrationsPage() {
     <div>
       <SettingsTabs />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {INTEGRATIONS.map((it) => {
-          const isConnected = connected.has(it.id)
-          const comingSoon = it.state === 'coming-soon'
-          return (
-            <Card key={it.id} className="flex flex-col p-5">
-              <div className="flex items-start justify-between">
-                <span className="flex size-10 items-center justify-center rounded-xl bg-secondary text-foreground">
-                  <it.icon className="size-5" />
-                </span>
-                {isConnected && (
-                  <Badge variant="success">
-                    <Check className="mr-1 size-3" />
-                    Connected
-                  </Badge>
-                )}
-                {comingSoon && <Badge variant="outline">Coming soon</Badge>}
-              </div>
-              <h3 className="mt-4 font-semibold">{it.name}</h3>
-              <p className="mt-1 flex-1 text-sm text-muted-foreground">
-                {it.description}
-              </p>
-              <Button
-                className="mt-4"
-                variant={isConnected ? 'outline' : 'default'}
-                disabled={comingSoon}
-                onClick={() => toggle(it.id, it.name)}
-              >
-                {comingSoon
-                  ? 'Notify me'
-                  : isConnected
-                    ? 'Disconnect'
-                    : 'Connect'}
-              </Button>
-            </Card>
-          )
-        })}
-      </div>
+      <TabFade>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {INTEGRATIONS.map((it) => {
+            const isConnected = connected.has(it.id)
+            const comingSoon = it.state === 'coming-soon'
+            return (
+              <Card key={it.id} className="flex flex-col p-5">
+                <div className="flex items-start justify-between">
+                  <span className="flex size-10 items-center justify-center rounded-xl bg-secondary text-foreground">
+                    <it.icon className="size-5" />
+                  </span>
+                  {isConnected && (
+                    <Badge variant="success">
+                      <Check className="mr-1 size-3" />
+                      Connected
+                    </Badge>
+                  )}
+                  {comingSoon && <Badge variant="outline">Coming soon</Badge>}
+                </div>
+                <h3 className="mt-4 font-semibold">{it.name}</h3>
+                <p className="mt-1 flex-1 text-sm text-muted-foreground">
+                  {it.description}
+                </p>
+                <Button
+                  className="mt-4"
+                  variant={isConnected ? 'outline' : 'default'}
+                  disabled={comingSoon}
+                  onClick={() => toggle(it.id, it.name)}
+                >
+                  {comingSoon
+                    ? 'Notify me'
+                    : isConnected
+                      ? 'Disconnect'
+                      : 'Connect'}
+                </Button>
+              </Card>
+            )
+          })}
+        </div>
+      </TabFade>
     </div>
   )
 }

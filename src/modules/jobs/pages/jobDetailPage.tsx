@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft, Pencil, Share2, Users } from 'lucide-react'
+import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -87,12 +88,24 @@ export function JobDetailPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              navigator.clipboard?.writeText(
+                `${window.location.origin}${ROUTES.careersJobDetail(job.slug)}`,
+              )
+              toast.success('Public job link copied')
+            }}
+          >
             <Share2 className="size-4" />
             Share
           </Button>
           {can('jobs.edit') && (
-            <Button size="sm">
+            <Button
+              size="sm"
+              onClick={() => toast.info('Job editing is coming soon')}
+            >
               <Pencil className="size-4" />
               Edit job
             </Button>
