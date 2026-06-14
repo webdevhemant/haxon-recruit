@@ -1,6 +1,7 @@
 import { Link, Outlet } from 'react-router-dom'
 import { ArrowUpRight, Star } from 'lucide-react'
 
+import { BrandMark } from '@/components/common/brandMark'
 import { ROUTES } from '@/lib/routes'
 
 const STATS = [
@@ -17,10 +18,8 @@ function Logo({ light }: { light?: boolean }) {
         light ? 'text-white' : ''
       }`}
     >
-      <span className="flex size-7 items-center justify-center rounded-md bg-[#7b6cff] text-sm text-white">
-        H
-      </span>
-      haxon<span className="-ml-2 text-[#7b6cff]">.</span>recruit
+      <BrandMark />
+      haxon<span className="text-[#7b6cff]">.</span>recruit
     </Link>
   )
 }

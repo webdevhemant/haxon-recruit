@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 
+import { BrandMark } from '@/components/common/brandMark'
 import { ROUTES } from '@/lib/routes'
 
 const COLUMNS = [
@@ -29,10 +30,8 @@ export function LandingFooter() {
       <div className="mx-auto grid max-w-6xl grid-cols-2 gap-10 px-6 py-16 md:grid-cols-4">
         <div className="col-span-2 md:col-span-2">
           <div className="flex items-center gap-2 font-display text-lg font-extrabold tracking-tight">
-            <span className="flex size-7 items-center justify-center rounded-md bg-[#7b6cff] text-sm text-black">
-              H
-            </span>
-            haxon<span className="-ml-2 text-[#7b6cff]">.</span>recruit
+            <BrandMark />
+            haxon<span className="text-[#7b6cff]">.</span>recruit
           </div>
           <p className="mt-4 max-w-xs text-sm text-white/40">
             A full-featured recruiting platform — 9 modules, 24 pages, zero

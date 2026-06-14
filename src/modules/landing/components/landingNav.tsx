@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 
+import { BrandMark } from '@/components/common/brandMark'
 import { ROUTES } from '@/lib/routes'
 
 const LINKS = [
@@ -16,10 +17,8 @@ export function LandingNav() {
           href="#top"
           className="flex items-center gap-2 font-display text-lg font-extrabold tracking-tight"
         >
-          <span className="flex size-7 items-center justify-center rounded-md bg-[#7b6cff] text-sm text-black">
-            H
-          </span>
-          haxon<span className="-ml-2 text-[#7b6cff]">.</span>recruit
+          <BrandMark />
+          haxon<span className="text-[#7b6cff]">.</span>recruit
         </a>
 
         <nav className="hidden items-center gap-8 md:flex">

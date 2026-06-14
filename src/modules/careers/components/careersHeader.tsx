@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
+import { BrandMark } from '@/components/common/brandMark'
 import { ROUTES } from '@/lib/routes'
 import { ROLE_LABEL } from '@/lib/rbac'
 import { DEMO_USERS, useAuthStore } from '@/stores/useAuthStore'
@@ -40,10 +41,8 @@ export function CareersHeader() {
           to={ROUTES.careers}
           className="flex items-center gap-2 font-display text-lg font-extrabold tracking-tight"
         >
-          <span className="flex size-7 items-center justify-center rounded-md bg-primary text-sm text-primary-foreground">
-            H
-          </span>
-          haxon<span className="-ml-2 text-primary">.</span>recruit
+          <BrandMark />
+          haxon<span className="text-primary">.</span>recruit
         </Link>
 
         <nav className="hidden items-center gap-7 md:flex">
