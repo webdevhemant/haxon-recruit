@@ -1,12 +1,28 @@
-# Haxon Recruit
+<div align="center">
 
-A full-featured recruiting platform (ATS) demo built entirely on **dummy data** — no
-backend, no real auth, no APIs. It combines the best ideas from Ashby, Greenhouse and
-Lever into one cohesive, fast, and beautifully designed product, powered by an
-internally-consistent seeded dataset that persists to `localStorage`.
+# 🟣 Haxon Recruit
 
-> Built as a portfolio piece. Everything is interactive and stateful, but runs 100%
-> in the browser.
+### The hiring OS — a full applicant tracking system, reimagined.
+
+**Haxon Recruit** is a production-grade **recruiting platform (ATS)** that combines the best
+of Ashby, Greenhouse and Lever into one cohesive, beautifully designed product —
+jobs, pipelines, interviews, scorecards, offers, analytics, a careers site and an admin
+back office. It runs **100% in the browser** on an internally-consistent seeded dataset,
+with **zero backend, no real auth, and no APIs**.
+
+`Vite + React 19 + TypeScript` · `Tailwind + shadcn/ui` · `Zustand` · `Recharts` ·
+`dnd-kit` · `Motion`
+
+</div>
+
+---
+
+## What this is
+
+A portfolio-grade demo of a complete hiring product. There's no server — every feature is
+real and interactive, backed by Zustand stores that persist to `localStorage`. The demo
+company is **Nexaflow Inc.** (the fictional employer that *uses* Haxon Recruit to hire), so
+the internal app is branded **Haxon** while the public careers site is branded **Nexaflow**.
 
 ## Highlights
 
